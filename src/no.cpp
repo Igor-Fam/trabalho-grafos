@@ -28,7 +28,7 @@ bool No::addAresta(int id1, int id2, float peso){
             primeiraAresta = newAresta;
             return true;
         } else if(primeiraAresta->id == id2){
-            cout << "Aresta ja existente!" << endl;
+            //cout << "Aresta ja existente!" << endl;
             return false;
         } else if(id2 < primeiraAresta->id){
             Aresta* temp = new Aresta(id2, peso);
@@ -55,7 +55,7 @@ No* No::addNo(int id, float peso){
         proxNo = newNo;
         return newNo;
     } else if(proxNo->id == id){
-        cout << "No ja existente!" << endl;
+        //cout << "No ja existente!" << endl;
         return nullptr;
     } else if(id < proxNo->id){
         No* newNo = new No(id, peso);

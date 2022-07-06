@@ -14,7 +14,7 @@ void Aresta::addAresta(int id, float peso){
         Aresta* newAresta = new Aresta(id, peso);
         proxAresta = newAresta;
     } else if(proxAresta->id == id){
-        cout << "Aresta ja existente!" << endl;
+        //cout << "Aresta ja existente!" << endl;
         return;
     } else if(id < proxAresta->id){
         Aresta* newAresta = new Aresta(id, peso);

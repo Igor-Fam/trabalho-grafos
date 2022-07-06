@@ -14,7 +14,7 @@ No* Grafo::auxAddNo(int id, float peso){
         primeiroNo = newNo;
         return primeiroNo;
     } else if(primeiroNo->id == id){
-        cout << "No ja existente!" << endl;
+        // cout << "No ja existente!" << endl;
         return nullptr;
     } else if(id < primeiroNo->id){
         No* newNo = new No(id, peso);

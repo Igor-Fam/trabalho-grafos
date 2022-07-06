@@ -24,3 +24,6 @@ aresta.o: aresta.cpp
 
 clean:
 	rm -f $(OBJS) $(OUT)
+
+chcp:
+	@chcp 65001
