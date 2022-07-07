@@ -40,7 +40,8 @@ public:
     void addGrauSaida(){ grauSaida++; }
     void printArestas();
     void fechoTransitivoDireto(set<int>* ftd, Grafo* g);
-    bool fechoTransitivoIndireto(int id, Grafo* g, set<int>* nosVisitados, set<int>* fti);
+    bool fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti);
+    bool fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti, set<int>* nosVisitados);
 };
 
 #endif

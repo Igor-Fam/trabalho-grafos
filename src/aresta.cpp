@@ -47,13 +47,13 @@ void Aresta::fechoTransitivoDireto(set<int>* ftd, Grafo* g){
     }
 }
 
-bool Aresta::fechoTransitivoIndireto(int id, Grafo* g, set<int>* nosVisitados, set<int>* fti){
+bool Aresta::fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti, set<int>* nosVisitados){
     if(this->id == id)
         return true;
     if(!nosVisitados->count(this->id))
-        return g->mapa[this->id]->fechoTransitivoIndireto(id, g, nosVisitados, fti);
+        return g->mapa[this->id]->fechoTransitivoIndireto(id, g, fti, nosVisitados);
     if(this->proxAresta != nullptr)
-        return proxAresta->fechoTransitivoIndireto(id, g, nosVisitados, fti);
+        return proxAresta->fechoTransitivoIndireto(id, g, fti, nosVisitados);
     else
         return false;
 }
