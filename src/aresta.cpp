@@ -1,5 +1,8 @@
 #include "aresta.h"
+#include "no.h"
 #include <iostream>
+#include <set>
+#include <unordered_map>
 
 using namespace std;
 
@@ -32,5 +35,14 @@ void Aresta::printList(){
         proxAresta->printList();
     } else {
         cout << " -|| ";
+    }
+}
+
+void Aresta::fechoTransitivoDireto(set<int>* ftd, Grafo* g){
+    if(!ftd->count(this->id)){
+        g->mapa[this->id]->fechoTransitivoDireto(ftd, g);
+    }
+    if(proxAresta != nullptr){
+        proxAresta->fechoTransitivoDireto(ftd, g);
     }
 }

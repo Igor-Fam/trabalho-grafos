@@ -1,6 +1,7 @@
 #include "grafo.h"
 #include <iostream>
 #include <unordered_map>
+#include <set>
 
 using namespace std;
 
@@ -66,4 +67,21 @@ void Grafo::printGrafo(){
 
 void Grafo::printGrau(int id){
     cout << mapa.at(id)->getGrau() << endl << endl;
+}
+
+void Grafo::fechoTransitivoDir(int id){
+    if(!this->direcionado){
+        cout << "Grafo nao direcionado nao possui fecho transitivo direto!" << endl;
+        return;
+    }
+    set<int>* ftd = new set<int>;
+    No * n = mapa[id];
+    n->fechoTransitivoDireto(ftd, this);
+    cout << "Fecho transitivo direto: " << endl;
+    for(int x : *ftd){
+        cout << x << " ";
+    }
+    cout << endl;
+
+    delete ftd;
 }

@@ -1,7 +1,7 @@
 OBJS	= main.o grafo.o no.o aresta.o
 SOURCE	= main.cpp grafo.cpp no.cpp aresta.cpp
 HEADER	= grafo.h no.h aresta.h
-OUT	= grafos
+OUT	= grafos.exe
 CC	 = g++
 FLAGS	 = -g -c -Wall
 LFLAGS	 = 
@@ -24,6 +24,3 @@ aresta.o: aresta.cpp
 
 clean:
 	rm -f $(OBJS) $(OUT)
-
-chcp:
-	@chcp 65001

@@ -1,5 +1,7 @@
-#include "no.h"
 #include <iostream>
+#include <set>
+#include <unordered_map>
+#include "no.h"
 
 using namespace std;
 
@@ -81,4 +83,11 @@ void No::printArestas(){
         cout << " -||" << endl;
     else
         proxNo->printArestas();
+}
+
+void No::fechoTransitivoDireto(set<int>* ftd, Grafo* g){
+    ftd->insert(this->id);
+    if(primeiraAresta != nullptr){
+        primeiraAresta->fechoTransitivoDireto(ftd, g);
+    } 
 }

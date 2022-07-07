@@ -6,6 +6,9 @@
 
 using namespace std;
 
+class No;
+class Aresta;
+
 class Grafo
 {
 private:
@@ -13,9 +16,10 @@ private:
     No* primeiroNo;
     unordered_map <int, No*> mapa;
     bool noExiste(int id);
+    friend class Aresta;
 public:
     Grafo(){ primeiroNo = nullptr; direcionado = false;};
-    Grafo(bool direcionado){ primeiroNo = nullptr; this->direcionado = direcionado;};
+    Grafo(bool direcionado){ primeiroNo = nullptr; this->direcionado = direcionado; };
     ~Grafo(){};
     bool auxAddAresta(int id1, int id2, float peso = 0);
     void addAresta(int id1, int id2, float peso = 0);
@@ -23,6 +27,7 @@ public:
     void addNo(int id, float peso = 0);
     void printGrafo();
     void printGrau(int id);
+    void fechoTransitivoDir(int id);
 };
 
 #endif
