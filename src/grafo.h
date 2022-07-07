@@ -27,7 +27,8 @@ public:
     void addNo(int id, float peso = 0);
     void printGrafo();
     void printGrau(int id);
-    void fechoTransitivoDir(int id);
+    void fechoTransitivoDireto(int id);
+    void fechoTransitivoIndireto(int id);
 };
 
 #endif

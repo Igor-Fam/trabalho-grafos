@@ -122,7 +122,7 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    g->fechoTransitivoDir(4);
+    g->fechoTransitivoIndireto(*argv[6] - '0');
 
     //Grafo* g = new Grafo();
     // while(true){

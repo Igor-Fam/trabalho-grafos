@@ -91,3 +91,18 @@ void No::fechoTransitivoDireto(set<int>* ftd, Grafo* g){
         primeiraAresta->fechoTransitivoDireto(ftd, g);
     } 
 }
+
+bool No::fechoTransitivoIndireto(int id, Grafo* g, set<int>* nosVisitados, set<int>* fti){
+    nosVisitados->insert(this->id);
+    if(primeiraAresta != nullptr){
+        if (primeiraAresta->fechoTransitivoIndireto(id, g, nosVisitados, fti)){
+            fti->insert(this->id);
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+
+}

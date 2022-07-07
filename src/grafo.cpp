@@ -69,7 +69,7 @@ void Grafo::printGrau(int id){
     cout << mapa.at(id)->getGrau() << endl << endl;
 }
 
-void Grafo::fechoTransitivoDir(int id){
+void Grafo::fechoTransitivoDireto(int id){
     if(!this->direcionado){
         cout << "Grafo nao direcionado nao possui fecho transitivo direto!" << endl;
         return;
@@ -84,4 +84,25 @@ void Grafo::fechoTransitivoDir(int id){
     cout << endl;
 
     delete ftd;
+}
+
+void Grafo::fechoTransitivoIndireto(int id){
+    if(!this->direcionado){
+        cout << "Grafo nao direcionado nao possui fecho transitivo indireto!" << endl;
+        return;
+    }
+    set<int>* fti = new set<int>;
+    set<int>* nosVisitados = new set<int>;
+    for(auto it : mapa){
+        if(!nosVisitados->count(it.first))
+            it.second->fechoTransitivoIndireto(id, this, nosVisitados, fti);
+
+    }
+    cout << "Fecho transitivo indireto: " << endl;
+    for(int x : *fti){
+        cout << x << " ";
+    }
+    cout << endl;
+
+    delete fti, nosVisitados;
 }
