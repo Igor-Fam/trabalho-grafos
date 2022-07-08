@@ -12,10 +12,11 @@ Aresta::Aresta(int id, float peso){
     proxAresta = nullptr;
 }
 
-void Aresta::addAresta(int id, float peso){
+void Aresta::addAresta(int id, int arestas_inseridas, float peso){
     if(proxAresta == nullptr){
         Aresta* newAresta = new Aresta(id, peso);
         proxAresta = newAresta;
+        proxAresta->setId_insercao(arestas_inseridas);
     } else if(proxAresta->id == id){
         //cout << "Aresta ja existente!" << endl;
         return;
@@ -23,13 +24,14 @@ void Aresta::addAresta(int id, float peso){
         Aresta* newAresta = new Aresta(id, peso);
         newAresta->proxAresta = proxAresta;
         proxAresta = newAresta;
+        proxAresta->setId_insercao(arestas_inseridas);
     } else {
-        proxAresta->addAresta(id, peso);
+        proxAresta->addAresta(id, arestas_inseridas, peso);
     }
 }
 
 void Aresta::printList(){
-    cout << id;
+    cout << id << " - " << id_insercao;
     if(proxAresta != nullptr){
         cout << " -> ";
         proxAresta->printList();

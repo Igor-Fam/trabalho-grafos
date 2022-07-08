@@ -61,8 +61,10 @@ int main(int argc, char **argv)
         }
     }
 
+    //cout << boolalpha << "dir: " << dir << endl;
     Grafo *g = new Grafo(dir);
-
+    g->setPesoAresta(peso_aresta);
+    
     ifstream arq_ent;
     arq_ent.open(argv[1], ios::in);
     if (arq_ent.is_open())
@@ -72,8 +74,7 @@ int main(int argc, char **argv)
         getline(arq_ent, str);
 
         int num_vert = stoi(str);
-
-        int cont = 0;
+        g->setOrdem(num_vert);
 
         while (!arq_ent.eof())
         {
@@ -110,6 +111,17 @@ int main(int argc, char **argv)
         exit(1);
     }
 
+
+    // Link para download do graphviz: https://graphviz.org/download/
+    // Após o download:
+    // No terminal: dot -Tyourformat(png, pdf...) your file -o output
+    // Ex: dot -Tpng arquivo.dot -o arquivo.png
+
+    // 1o parametro: grafo 
+    // 2o parametro: nome do arquivo .dot 
+    // 3o parametro: nome do grafo
+    g->escreveArquivoDot(g, "arquivo.dot", "G");
+
     ofstream arq_saida;
     arq_saida.open(argv[2], ios::out);
     if (arq_saida.is_open())
@@ -121,6 +133,7 @@ int main(int argc, char **argv)
         cout << "Erro ao abrir o arquivo de saída" << endl;
         exit(1);
     }
+    
     g->printGrafo();
     g->fechoTransitivoIndireto(1);
 

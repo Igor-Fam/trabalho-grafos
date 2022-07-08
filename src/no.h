@@ -4,6 +4,7 @@
 #include "aresta.h"
 #include "grafo.h"
 #include <iostream>
+#include <fstream>
 #include <set>
 #include <unordered_map>
 
@@ -16,6 +17,7 @@ class No
 {
 private:
     int id;
+    int id_insercao;
     int grau;
     int grauEntrada;
     int grauSaida;
@@ -27,11 +29,11 @@ private:
     friend class Aresta;
 
 public:
-    No(int id, float peso = 0);
+    No(int id, int id_insercao, float peso = 0);
     No(){};
     ~No(){};
-    bool addAresta(int id1, int id2, float peso = 0);
-    No* addNo(int id, float peso = 0);
+    bool addAresta(int id1, int id2, int arestas_inseridas, float peso = 0);
+    No* addNo(int id, int &vert_inseridos, float peso = 0);
     int getGrau(){ return grau; }
     void addGrau(){ grau++; }
     int getGrauEntrada(){ return grauEntrada; }
@@ -42,6 +44,7 @@ public:
     void fechoTransitivoDireto(set<int>* ftd, Grafo* g);
     bool fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti);
     bool fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti, set<int>* nosVisitados);
+    void printArestasArquivoDot(ofstream saida);
 };
 
 #endif
