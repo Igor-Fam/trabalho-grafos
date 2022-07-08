@@ -92,23 +92,24 @@ void No::fechoTransitivoDireto(set<int>* ftd, Grafo* g){
     } 
 }
 
-bool No::fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti){
-    set<int>* nosVisitados = new set<int>;
-    nosVisitados->insert(this->id);
-    if(primeiraAresta != nullptr){
-        if (primeiraAresta->fechoTransitivoIndireto(id, g, fti, nosVisitados)){
-            fti->insert(this->id);
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
+// bool No::fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti){
+//     set<int>* nosVisitados = new set<int>;
+//     nosVisitados->insert(this->id);
+//     if(primeiraAresta != nullptr){
+//         if (primeiraAresta->fechoTransitivoIndireto(id, g, fti, nosVisitados)){
+//             fti->insert(this->id);
+//             return true;
+//         } else {
+//             return false;
+//         }
+//     } else {
+//         return false;
+//     }
 
-}
+// }
 
 bool No::fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti, set<int>* nosVisitados){
+    //cout << "     No " << this->id << ": " << endl;
     nosVisitados->insert(this->id);
     if(primeiraAresta != nullptr){
         if (primeiraAresta->fechoTransitivoIndireto(id, g, fti, nosVisitados)){

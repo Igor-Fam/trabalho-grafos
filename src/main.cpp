@@ -121,8 +121,8 @@ int main(int argc, char **argv)
         cout << "Erro ao abrir o arquivo de saída" << endl;
         exit(1);
     }
-
-    g->fechoTransitivoIndireto(*argv[6] - '0');
+    g->printGrafo();
+    g->fechoTransitivoIndireto(1);
 
     //Grafo* g = new Grafo();
     // while(true){

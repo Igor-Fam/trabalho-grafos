@@ -94,7 +94,9 @@ void Grafo::fechoTransitivoIndireto(int id){
     set<int>* fti = new set<int>;
     set<int>* nosVisitados = new set<int>;
     for(auto it : mapa){
-        it.second->fechoTransitivoIndireto(id, this, fti);
+        *nosVisitados = {};
+        //cout << endl << "* No " << it.first << ": " << endl;
+        it.second->fechoTransitivoIndireto(id, this, fti, nosVisitados);
     }
     cout << "Fecho transitivo indireto: " << endl;
     for(int x : *fti){
