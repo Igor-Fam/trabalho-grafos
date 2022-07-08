@@ -76,7 +76,7 @@ No* No::addNo(int id, int &vert_inseridos, float peso){
 }
 
 void No::printArestas(){
-    cout << id << " - " << id_insercao;
+    cout << id;
     if(primeiraAresta == nullptr){
         cout << " -|| ";
     }

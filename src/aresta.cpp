@@ -31,7 +31,7 @@ void Aresta::addAresta(int id, int arestas_inseridas, float peso){
 }
 
 void Aresta::printList(){
-    cout << id << " - " << id_insercao;
+    cout << id;
     if(proxAresta != nullptr){
         cout << " -> ";
         proxAresta->printList();
