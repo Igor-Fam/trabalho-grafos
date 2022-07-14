@@ -22,8 +22,8 @@ private:
     int grauEntrada;
     int grauSaida;
     float peso;
-    Aresta* primeiraAresta;
-    No* proxNo;
+    Aresta *primeiraAresta;
+    No *proxNo;
     bool noExiste(int id);
     friend class Grafo;
     friend class Aresta;
@@ -33,17 +33,17 @@ public:
     No(){};
     ~No(){};
     bool addAresta(int id1, int id2, int arestas_inseridas, float peso = 0);
-    No* addNo(int id, int &vert_inseridos, float peso = 0);
-    int getGrau(){ return grau; }
-    void addGrau(){ grau++; }
-    int getGrauEntrada(){ return grauEntrada; }
-    void addGrauEntrada(){ grauEntrada++; }
-    int getGrauSaida(){ return grauSaida; }
-    void addGrauSaida(){ grauSaida++; }
+    No *addNo(int id, int &vert_inseridos, float peso = 0);
+    int getGrau() { return grau; }
+    void addGrau() { grau++; }
+    int getGrauEntrada() { return grauEntrada; }
+    void addGrauEntrada() { grauEntrada++; }
+    int getGrauSaida() { return grauSaida; }
+    void addGrauSaida() { grauSaida++; }
     void printArestas();
-    void fechoTransitivoDireto(set<int>* ftd, Grafo* g);
-    bool fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti);
-    bool fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti, set<int>* nosVisitados);
+    void fechoTransitivoDireto(set<int> *ftd, Grafo *g);
+    bool fechoTransitivoIndireto(int id, Grafo *g, set<int> *fti);
+    bool fechoTransitivoIndireto(int id, Grafo *g, set<int> *fti, set<int> *nosVisitados);
     void printArestasArquivoDot(ofstream saida);
 };
 

@@ -61,10 +61,10 @@ int main(int argc, char **argv)
         }
     }
 
-    //cout << boolalpha << "dir: " << dir << endl;
+    // cout << boolalpha << "dir: " << dir << endl;
     Grafo *g = new Grafo(dir);
     g->setPesoAresta(peso_aresta);
-    
+
     ifstream arq_ent;
     arq_ent.open(argv[1], ios::in);
     if (arq_ent.is_open())
@@ -101,7 +101,7 @@ int main(int argc, char **argv)
             g->addAresta(id1, id2, p_a);
         }
 
-        //g->printGrafo();
+        // g->printGrafo();
 
         arq_ent.close();
     }
@@ -111,17 +111,17 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-
     // Link para download do graphviz: https://graphviz.org/download/
     // Após o download:
     // No terminal: dot -Tyourformat(png, pdf...) your file -o output
     // Ex: dot -Tpng arquivo.dot -o arquivo.png
 
-    // 1o parametro: grafo 
-    // 2o parametro: nome do arquivo .dot 
+    // 1o parametro: grafo
+    // 2o parametro: nome do arquivo .dot
     // 3o parametro: nome do grafo
     g->escreveArquivoDot(g, "arquivo.dot", "G");
 
+    /*
     ofstream arq_saida;
     arq_saida.open(argv[2], ios::out);
     if (arq_saida.is_open())
@@ -133,38 +133,54 @@ int main(int argc, char **argv)
         cout << "Erro ao abrir o arquivo de saída" << endl;
         exit(1);
     }
-    
+    */
+
     g->printGrafo();
     g->fechoTransitivoIndireto(1);
 
-    //Grafo* g = new Grafo();
-    // while(true){
-    //     cout << "Digite n para adicionar um no, a para adicionar uma aresta e g para verificar grau de um no" << endl;
-    //     char option;
-    //     cin >> option;
-    //     if(option == 'n'){
-    //         cout << "Digite o id do no" << endl;
-    //         int id;
-    //         cin >> id;
-    //         g->addNo(id);
-    //     }
-    //     if(option == 'a'){
-    //         cout << "Digite o id do primeiro no" << endl;
-    //         int id1;
-    //         cin >> id1;
-    //         cout << "Digite o id do segundo no" << endl;
-    //         int id2;
-    //         cin >> id2;
-    //         g->addAresta(id1, id2, false);
-    //     }
-    //     if(option == 'g'){
-    //         cout << "Digite o id do no" << endl;
-    //         int id;
-    //         cin >> id;
-    //         g->printGrau(id);
-    //     }
-    //     g->printGrafo();
-    // }
+    // Kruskal
+    int num_vert;
+    cout << "Numero de Vertices: ";
+    cin >> num_vert;
+
+    int subConj_vertices[num_vert];
+
+    for (int i = 0; i < num_vert; i++)
+    {
+        cout << "Vertice " << i << ": ";
+        cin >> subConj_vertices[i];
+    }
+
+    g->arvoreMinimaKruskal(num_vert, subConj_vertices, argv[2]);
+
+    // Grafo* g = new Grafo();
+    //  while(true){
+    //      cout << "Digite n para adicionar um no, a para adicionar uma aresta e g para verificar grau de um no" << endl;
+    //      char option;
+    //      cin >> option;
+    //      if(option == 'n'){
+    //          cout << "Digite o id do no" << endl;
+    //          int id;
+    //          cin >> id;
+    //          g->addNo(id);
+    //      }
+    //      if(option == 'a'){
+    //          cout << "Digite o id do primeiro no" << endl;
+    //          int id1;
+    //          cin >> id1;
+    //          cout << "Digite o id do segundo no" << endl;
+    //          int id2;
+    //          cin >> id2;
+    //          g->addAresta(id1, id2, false);
+    //      }
+    //      if(option == 'g'){
+    //          cout << "Digite o id do no" << endl;
+    //          int id;
+    //          cin >> id;
+    //          g->printGrau(id);
+    //      }
+    //      g->printGrafo();
+    //  }
 
     return 0;
 }
