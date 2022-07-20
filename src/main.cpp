@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <cfloat>
 #include <unordered_map>
 // #include "aresta.h"
 // #include "no.h"
@@ -140,7 +141,7 @@ int main(int argc, char **argv)
 
     // Kruskal
     int num_vert;
-    cout << "Numero de Vertices: ";
+    cout << "Numero de Vertices (>=2): ";
     cin >> num_vert;
 
     int subConj_vertices[num_vert];
@@ -151,7 +152,8 @@ int main(int argc, char **argv)
         cin >> subConj_vertices[i];
     }
 
-    g->arvoreMinimaKruskal(num_vert, subConj_vertices, argv[2]);
+    //g->arvoreMinimaKruskal(num_vert, subConj_vertices, argv[2]);
+    g->arvoreMinimaPrim(num_vert, subConj_vertices, argv[2]);
 
     // Grafo* g = new Grafo();
     //  while(true){

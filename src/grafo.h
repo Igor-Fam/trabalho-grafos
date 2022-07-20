@@ -24,6 +24,7 @@ private:
     void QuickSort(Aresta arestas[], int p, int q);
     int particionamento(Aresta arestas[], int p, int q);
     void troca(Aresta *a, Aresta *b);
+    int getPeso(Aresta arestas[], int id, int id_origem, int tamListaArestas);
 
 public:
     Grafo()
@@ -54,6 +55,7 @@ public:
     void escreveArquivoDot(Grafo G, string arquivoSaida, string nome);
     void setPesoAresta(bool pesoAresta) { this->peso_aresta = pesoAresta; };
     void arvoreMinimaKruskal(int num_vert, int subConj_vertices[], string arquivo);
+    void arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquivo);
 };
 
 #endif

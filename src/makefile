@@ -21,6 +21,5 @@ no.o: no.cpp
 aresta.o: aresta.cpp
 	$(CC) $(FLAGS) aresta.cpp 
 
-
 clean:
 	rm -f $(OBJS) $(OUT)

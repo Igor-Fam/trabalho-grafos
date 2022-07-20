@@ -1,6 +1,7 @@
 #include "grafo.h"
 #include <iostream>
 #include <fstream>
+#include <climits>
 #include <unordered_map>
 #include <set>
 
@@ -211,6 +212,33 @@ void Grafo::arvoreMinimaKruskal(int num_vert, int subConj_vertices[], string arq
         }
     }
 
+    Grafo *arvMinimaKruskal = new Grafo(false);
+    arvMinimaKruskal->setOrdem(num_vert);
+    arvMinimaKruskal->setPesoAresta(true);
+
+    if (num_vert == 1)
+    {
+        arvMinimaKruskal->addNo(subArvores[0]->id);
+        ofstream saida;
+        saida.open(arquivo, ios::out);
+        if (saida.is_open())
+        {
+            No *v = arvMinimaKruskal->primeiroNo;
+            saida << "graph "
+                  << "Kruskal"
+                  << "{" << endl;
+            saida << v->id;
+            saida << endl;
+            saida << "}" << endl;
+            saida.close();
+        }
+        else
+        {
+            cout << "Erro ao abrir o arquivo " << arquivo << endl;
+        }
+        return;
+    }
+
     for (int i = 0; i < num_vert; i++)
     {
         Aresta *a = subArvores[i]->primeiraAresta;
@@ -235,9 +263,6 @@ void Grafo::arvoreMinimaKruskal(int num_vert, int subConj_vertices[], string arq
     int tamListaArestas = cont;
     int cont_vert = 0;
     int cont_arestas = 0;
-    Grafo *arvMinimaKruskal = new Grafo(false);
-    arvMinimaKruskal->setOrdem(num_vert);
-    arvMinimaKruskal->setPesoAresta(true);
 
     while (cont_vert < num_vert - 1 && tamListaArestas != 0)
     {
@@ -324,4 +349,188 @@ void Grafo::troca(Aresta *a, Aresta *b)
     Aresta aux = *a;
     *a = *b;
     *b = aux;
+}
+
+void Grafo::arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquivo)
+{
+
+    if (direcionado)
+    {
+        cout << "Erro: Grafo direcionado" << endl;
+        exit(1);
+    }
+
+    Grafo *arvMinimaPrim = new Grafo(false);
+    arvMinimaPrim->setOrdem(num_vert);
+    arvMinimaPrim->setPesoAresta(true);
+
+    if (num_vert == 0)
+    {
+        arvMinimaPrim->escreveArquivoDot(*arvMinimaPrim, arquivo, "Prim");
+        cout << "A Arvore Geradora Minima obtida atraves do algoritmo de Prim foi salva em " << arquivo << endl;
+        return;
+    }
+
+    No *subArvores[num_vert];
+    Aresta arestas[arestas_inseridas];
+    int cont = 0;
+
+    for (int i = 0; i < num_vert; i++)
+    {
+        try
+        {
+            subArvores[i] = mapa.at(subConj_vertices[i]);
+        }
+        catch (const out_of_range &oor)
+        {
+            cout << "Erro: Nao existe vertice de id " << subConj_vertices[i] << " no grafo" << endl;
+            exit(1);
+        }
+    }
+
+    if (num_vert == 1)
+    {
+        arvMinimaPrim->addNo(subArvores[0]->id);
+        ofstream saida;
+        saida.open(arquivo, ios::out);
+        if (saida.is_open())
+        {
+            No *v = arvMinimaPrim->primeiroNo;
+            saida << "graph "
+                  << "Prim"
+                  << "{" << endl;
+            saida << v->id;
+            saida << endl;
+            saida << "}" << endl;
+            saida.close();
+        }
+        else
+        {
+            cout << "Erro ao abrir o arquivo " << arquivo << endl;
+        }
+        return;
+    }
+
+    Aresta *menorPeso = NULL;
+    for (int i = 0; i < num_vert; i++)
+    {
+        Aresta *a = subArvores[i]->primeiraAresta;
+        while (a != NULL)
+        {
+            for (int j = i + 1; j < num_vert; j++)
+            {
+                if (a->id == subArvores[j]->id)
+                {
+                    arestas[cont].id = subArvores[j]->id;
+                    arestas[cont].id_origem = subArvores[i]->id;
+                    arestas[cont].peso = a->peso;
+
+                    if (menorPeso == NULL)
+                    {
+                        menorPeso = &arestas[cont];
+                    }
+                    else
+                    {
+                        if (menorPeso->peso >= arestas[cont].peso)
+                        {
+                            menorPeso = &arestas[cont];
+                        }
+                    }
+                    cont++;
+                }
+            }
+            a = a->proxAresta;
+        }
+    }
+
+    int tamListaArestas = cont;
+
+    arvMinimaPrim->addNo(menorPeso->id_origem);
+    arvMinimaPrim->addNo(menorPeso->id);
+    arvMinimaPrim->addAresta(menorPeso->id_origem, menorPeso->id, menorPeso->peso);
+
+    int custo[num_vert + 1];
+    int prox[num_vert];
+
+    custo[num_vert] = INT_MAX;
+
+    int indMenor = num_vert;
+
+    for (int i = 0; i < num_vert; i++)
+    {
+        int peso1 = getPeso(arestas, subArvores[i]->id, menorPeso->id, tamListaArestas);
+        int peso2 = getPeso(arestas, subArvores[i]->id, menorPeso->id_origem, tamListaArestas);
+        if (peso1 == 0 || peso2 == 0)
+        {
+            prox[i] = 0;
+            custo[i] = 0;
+        }
+        else if (peso1 < peso2)
+        {
+            custo[i] = peso1;
+            prox[i] = menorPeso->id;
+        }
+        else
+        {
+            custo[i] = peso2;
+            prox[i] = menorPeso->id_origem;
+        }
+        if (custo[i] != 0 && custo[i] <= custo[indMenor])
+        {
+            indMenor = i;
+        }
+    }
+
+    int cont_vert = 0;
+
+    while (cont_vert < num_vert - 2)
+    {
+
+        menorPeso->id = subArvores[indMenor]->id;
+        menorPeso->id_origem = prox[indMenor];
+        menorPeso->peso = custo[indMenor];
+
+        arvMinimaPrim->addNo(menorPeso->id_origem);
+        arvMinimaPrim->addNo(menorPeso->id);
+        arvMinimaPrim->addAresta(menorPeso->id_origem, menorPeso->id, menorPeso->peso);
+
+        prox[indMenor] = 0;
+        custo[indMenor] = 0;
+        indMenor = num_vert;
+
+        for (int i = 0; i < num_vert; i++)
+        {
+            int peso = getPeso(arestas, subArvores[i]->id, menorPeso->id, tamListaArestas);
+            if (prox[i] != 0 && custo[i] > peso)
+            {
+                prox[i] = menorPeso->id;
+                custo[i] = peso;
+            }
+            if (custo[i] != 0 && custo[i] <= custo[indMenor])
+                indMenor = i;
+        }
+        cont_vert++;
+    }
+
+    arvMinimaPrim->escreveArquivoDot(*arvMinimaPrim, arquivo, "Prim");
+
+    cout << "A Arvore Geradora Minima obtida atraves do algoritmo de Prim foi salva em " << arquivo << endl;
+}
+
+int Grafo::getPeso(Aresta arestas[], int id1, int id2, int tamListaArestas)
+{
+    if (id1 == id2)
+        return 0;
+    for (int j = 0; j < tamListaArestas; j++)
+    {
+        if (arestas[j].id_origem == id1 && arestas[j].id == id2)
+        {
+            return arestas[j].peso;
+        }
+        else if (arestas[j].id_origem == id2 && arestas[j].id == id1)
+        {
+            return arestas[j].peso;
+        }
+    }
+    return INT_MAX;
 }
