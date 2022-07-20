@@ -49,13 +49,11 @@ void Grafo::addNo(int id, float peso)
 
 void Grafo::addAresta(int id1, int id2, float peso)
 {
-    bool a_id1_id2 = true;
     if (!(this->direcionado))
     {
         if (auxAddAresta(id1, id2, peso))
         {
             mapa.at(id1)->addGrau();
-            a_id1_id2 = false;
         }
         if (auxAddAresta(id2, id1, peso))
         {
@@ -533,4 +531,71 @@ int Grafo::getPeso(Aresta arestas[], int id1, int id2, int tamListaArestas)
         }
     }
     return INT_MAX;
+}
+
+float Grafo::coefAgrupLocal(int id_vert){
+    No *v;
+    try {
+        v = mapa.at(id_vert);
+    } catch (const out_of_range &oor){
+        cout << "Erro: Nao existe vertice de id " << id_vert << " no grafo" << endl;
+        exit(1);
+    }
+    int numArestasTot;
+    int num_vAdj;
+    if (direcionado) {
+        num_vAdj = v->getGrauEntrada() + v->getGrauSaida();
+        numArestasTot = (num_vAdj - 1) * num_vAdj;
+    }
+    else {
+        num_vAdj = v->getGrau();
+        numArestasTot = (num_vAdj - 1) * num_vAdj / 2;
+    }
+
+    Aresta *a = v->primeiraAresta;
+    int id_vAdj [num_vAdj];
+
+    int i = 0;
+
+    while (a != NULL) {
+        id_vAdj[i] = a->id;
+        a = a->proxAresta;
+        i++;
+    }
+
+    int numArestasExist = 0;
+
+    for (int i = 0; i < num_vAdj; i++){
+        No *adj = mapa.at(id_vAdj[i]);
+        a = adj->primeiraAresta;
+        while (a != NULL) {
+            for (int j = 0; j < num_vAdj; j++){
+                if (i != j && a->id != id_vert && a->id == id_vAdj[j]){
+                    numArestasExist ++;
+                }
+            }
+            a = a->proxAresta;
+        }
+    }   
+
+    if (!direcionado) {
+        numArestasExist /= 2;
+    }
+
+    if (numArestasTot == 0){
+        cout << "Erro: o vertice de id " << id_vert << " possui um unico vertice adjacente. Portanto, nao foi possivel " << 
+        "calcular o coeficiente de agrupamento deste (divisao por zero)" << endl;
+        exit(1); 
+    }
+    return float(numArestasExist)/numArestasTot;
+}
+
+float Grafo::coefAgrupMedio(){
+    float somaCoef = 0;
+    No *v = primeiroNo;
+    while (v != NULL){
+        somaCoef += coefAgrupLocal(v->id);
+        v = v->proxNo;
+    }
+    return somaCoef/ordem;
 }

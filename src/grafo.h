@@ -41,6 +41,7 @@ public:
         vert_inseridos = 0;
         arestas_inseridas = 0;
     };
+
     ~Grafo(){};
     bool auxAddAresta(int id1, int id2, float peso = 0);
     void addAresta(int id1, int id2, float peso = 0);
@@ -56,6 +57,8 @@ public:
     void setPesoAresta(bool pesoAresta) { this->peso_aresta = pesoAresta; };
     void arvoreMinimaKruskal(int num_vert, int subConj_vertices[], string arquivo);
     void arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquivo);
+    float coefAgrupLocal(int id_vert);
+    float coefAgrupMedio();
 };
 
 #endif
