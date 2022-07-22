@@ -98,19 +98,19 @@ No *No::addNo(int id, int &vert_inseridos, float peso)
 
 void No::printArestas()
 {
-    cout << id;
+    cout << "Vertice: " << id;
     if (primeiraAresta == nullptr)
     {
         cout << " -|| ";
     }
     else
     {
-        cout << " -> ";
+        cout << " -> Vertices adjacentes: ";
         primeiraAresta->printList();
     }
     cout << endl;
     if (proxNo == nullptr)
-        cout << " -||" << endl;
+        cout << "Vertice: -||" << endl;
     else
         proxNo->printArestas();
 }
