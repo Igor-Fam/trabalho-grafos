@@ -29,12 +29,17 @@ private:
     friend class Aresta;
 
 public:
+    
+    list<int> ListAnt;
+    list<int> ListAdj;
+
     No(int id, int id_insercao, float peso = 0);
     No(){};
     ~No(){};
     bool addAresta(int id1, int id2, int arestas_inseridas, float peso = 0);
     No *addNo(int id, int &vert_inseridos, float peso = 0);
     int getGrau() { return grau; }
+    int getId() {return id;}
     void addGrau() { grau++; }
     int getGrauEntrada() { return grauEntrada; }
     void addGrauEntrada() { grauEntrada++; }
@@ -45,6 +50,7 @@ public:
     bool fechoTransitivoIndireto(int id, Grafo *g, set<int> *fti);
     bool fechoTransitivoIndireto(int id, Grafo *g, set<int> *fti, set<int> *nosVisitados);
     void printArestasArquivoDot(ofstream saida);
+    void No::adicionaAdjacencia(int id_alvo);
 };
 
 #endif

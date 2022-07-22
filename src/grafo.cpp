@@ -4,6 +4,8 @@
 #include <climits>
 #include <unordered_map>
 #include <set>
+#include "Dijkstra.h"
+#include "Floyd.h"
 
 using namespace std;
 
@@ -598,4 +600,41 @@ float Grafo::coefAgrupMedio(){
         v = v->proxNo;
     }
     return somaCoef/ordem;
+}
+
+No* Grafo::procurarNo(int id){
+    for(auto i = nosGrafo.begin(); i != nosGrafo.end();i++){
+        No* aux = *i;
+        if(aux->getId() == id)
+        return aux;
+    }
+    return nullptr;
+}
+
+Aresta* Grafo::existeAresta(int id ,int id_alvo){ // FUNCAO PARA ACHAR UMA ARESTA DADO DOIS VERTICES
+    for (auto i = arestasGrafo.begin(); i != arestasGrafo.end(); i++){
+        Aresta* verificador = *i;
+        if(verificador->getId() == id && verificador->getId() == id_alvo){
+            return verificador;
+        }
+    }
+    cout << "Nao existe essa aresta no grafo." << endl;
+    return NULL;
+}
+
+list<int> Grafo::caminhoMinimoDijkstra(int ID1, int ID2){
+    Dijkstra aux;
+    list<int> caminhoD = aux.caminhoMinimo(this, ID1, ID2);
+    if(caminhoD.size()>0){
+        cout << "Caminho minimo: ";
+        for(auto i = caminhoD.begin(); i != caminhoD.end(); i++){
+            cout << *i << " ";
+        }
+        cout << endl;
+    }
+    return caminhoD;
+}
+void Grafo::caminhoMinimoFloyd(int ID1, int ID2){
+    Floyd aux;
+    aux.caminhoMinimo(this, ID1, ID2);
 }

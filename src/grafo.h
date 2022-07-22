@@ -2,9 +2,14 @@
 #define GRAPH_H
 
 #include "no.h"
+#include "aresta.h"
 #include <unordered_map>
+#include <list>
 
 using namespace std;
+
+class Dijkstra;
+class Floyd;
 
 class No;
 class Aresta;
@@ -27,6 +32,10 @@ private:
     int getPeso(Aresta arestas[], int id, int id_origem, int tamListaArestas);
 
 public:
+
+list<No*> nosGrafo;
+list<Aresta*> arestasGrafo;
+ 
     Grafo()
     {
         primeiroNo = nullptr;
@@ -52,6 +61,7 @@ public:
     void fechoTransitivoDireto(int id);
     void fechoTransitivoIndireto(int id);
     void setOrdem(int ordemGrafo) { ordem = ordemGrafo; };
+    int getOrdem(){return ordem;}
     int getVert_inseridos() { return vert_inseridos; };
     void escreveArquivoDot(Grafo G, string arquivoSaida, string nome);
     void setPesoAresta(bool pesoAresta) { this->peso_aresta = pesoAresta; };
@@ -59,6 +69,10 @@ public:
     void arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquivo);
     float coefAgrupLocal(int id_vert);
     float coefAgrupMedio();
+    No* procurarNo(int id);
+    Aresta* existeAresta(int id, int id_alvo);
+    list<int> caminhoMinimoDijkstra(int ID1, int ID2);
+    void caminhoMinimoFloyd(int ID1, int ID2);
 };
 
 #endif

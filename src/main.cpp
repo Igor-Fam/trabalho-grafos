@@ -24,13 +24,13 @@ bool comparaStrings(const char *str1, const char *str2)
     return false;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
 
     bool dir, peso_aresta, peso_vertice;
-    bool invalido;
-
-    for (int i = 3; i <= 5; i++)
+    bool invalido = false;
+        
+    for (int i = 3;i <= 5; i++)
     {
         if (argv[i] != NULL)
         {
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
             else if (!invalido && i == 5)
                 if (peso_aresta && parametro)
                 {
-                    cout << "Não é possível atribuir peso às arestas e aos vértices simultaneamente" << endl;
+                    cout << "Não é possível atribuir peso às arestas e aos vértices simultaneamente"<< endl;
                     exit(1);
                 }
                 else
@@ -57,12 +57,13 @@ int main(int argc, char **argv)
         }
         if (argv[i] == NULL || invalido)
         {
+    
             cout << "Argumento passado pela linha de comando inválido ou faltante" << endl;
             exit(1);
         }
     }
 
-    // cout << boolalpha << "dir: " << dir << endl;
+    cout << boolalpha << "dir: " << dir << endl;
     Grafo *g = new Grafo(dir);
     g->setPesoAresta(peso_aresta);
 
@@ -100,6 +101,8 @@ int main(int argc, char **argv)
             g->addNo(id1);
             g->addNo(id2);
             g->addAresta(id1, id2, p_a);
+            No* noid1 = g->procurarNo(id1);
+            noid1->ListAdj.push_back(id2);
         }
 
         // g->printGrafo();

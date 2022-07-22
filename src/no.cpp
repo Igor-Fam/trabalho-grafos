@@ -2,6 +2,7 @@
 #include <set>
 #include <unordered_map>
 #include "no.h"
+#include "aresta.h"
 
 using namespace std;
 
@@ -28,6 +29,7 @@ bool No::noExiste(int id)
 
 bool No::addAresta(int id1, int id2, int arestas_inseridas, float peso)
 {
+    adicionaAdjacencia(id2);
     // cout << id1 << " " << id2 << " " << arestas_inseridas << endl;
     if (this->id == id1)
     {
@@ -160,4 +162,9 @@ bool No::fechoTransitivoIndireto(int id, Grafo *g, set<int> *fti, set<int> *nosV
     {
         return false;
     }
+}
+
+void No::adicionaAdjacencia(int id_alvo)
+{
+    this->ListAdj.push_back(id_alvo);
 }

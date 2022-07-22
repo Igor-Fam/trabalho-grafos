@@ -15,6 +15,8 @@ Aresta::Aresta(int id, float peso)
 
 void Aresta::addAresta(int id, int arestas_inseridas, float peso)
 {
+    
+    
     if (proxAresta == nullptr)
     {
         Aresta *newAresta = new Aresta(id, peso);

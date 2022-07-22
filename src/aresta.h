@@ -24,11 +24,13 @@ public:
     Aresta(int id, float peso = 0);
     Aresta(){};
     ~Aresta(){};
-    void addAresta(int id, int arestas_inseridas, float peso = 0);
+    void addAresta(int id, int arestas_inseridas,float peso = 0);
     void printList();
     void fechoTransitivoDireto(set<int> *ftd, Grafo *g);
     bool fechoTransitivoIndireto(int id, Grafo *g, set<int> *fti, set<int> *nosVisitados);
     void setId_insercao(int idInsercao) { this->id_insercao = idInsercao; };
+    float getPeso(){return this->peso;};
+    int getId(){return id;};
 };
 
 #endif
