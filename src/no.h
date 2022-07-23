@@ -7,6 +7,8 @@
 #include <fstream>
 #include <set>
 #include <unordered_map>
+#include <list>
+#include <math.h>
 
 using namespace std;
 
@@ -41,6 +43,7 @@ public:
     int getGrau() { return grau; }
     int getId() {return id;}
     void addGrau() { grau++; }
+    Aresta *retornaArestas();
     int getGrauEntrada() { return grauEntrada; }
     void addGrauEntrada() { grauEntrada++; }
     int getGrauSaida() { return grauSaida; }
@@ -50,7 +53,8 @@ public:
     bool fechoTransitivoIndireto(int id, Grafo *g, set<int> *fti);
     bool fechoTransitivoIndireto(int id, Grafo *g, set<int> *fti, set<int> *nosVisitados);
     void printArestasArquivoDot(ofstream saida);
-    void No::adicionaAdjacencia(int id_alvo);
+    void adicionaAdjacencia(int id_alvo);
+    void PreencheDist( unsigned int dist[], int tam , Grafo* g);
 };
 
 #endif

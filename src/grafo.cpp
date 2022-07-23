@@ -6,6 +6,7 @@
 #include <set>
 #include "Dijkstra.h"
 #include "Floyd.h"
+#include "math.h"
 
 using namespace std;
 
@@ -45,8 +46,12 @@ No *Grafo::auxAddNo(int id, float peso)
 void Grafo::addNo(int id, float peso)
 {
     No *n = auxAddNo(id, peso);
-    if (n != nullptr)
+
+    if (n != nullptr){
         mapa[id] = n;
+        nosGrafo.push_back(n);
+    }
+        
 }
 
 void Grafo::addAresta(int id1, int id2, float peso)
@@ -141,6 +146,8 @@ void Grafo::fechoTransitivoIndireto(int id)
     delete fti, nosVisitados;
 }
 
+//Escreve no arquivo 'arquivoSaida' de formato .dot o Grafo 'G' de nome 'nome',
+//onde 'arquivoSaida', 'G', e 'nome' são passados por parâmetro
 void Grafo::escreveArquivoDot(Grafo G, string arquivoSaida, string nome)
 {
     ofstream saida;
@@ -159,7 +166,7 @@ void Grafo::escreveArquivoDot(Grafo G, string arquivoSaida, string nome)
     {
         Aresta *a = v->primeiraAresta;
         while (a != NULL)
-        {
+        {   
             if (adicionado[a->id_insercao] == false)
             {
                 if (!direcionado)
@@ -185,6 +192,10 @@ void Grafo::escreveArquivoDot(Grafo G, string arquivoSaida, string nome)
     saida << "}" << endl;
 }
 
+//Encontra, através do algoritmo de Kruskal, a arvore geradora mínima de um subconjunto de vertices e
+//escreve esta no arquivo 'arquivo' com formato .dot
+//Recebe como parâmetro o número de vértices contidos no subconjunto (num_vert), o subconjunto de vértices
+//(subConj_vertices[]) e o nome do arquivo em que se deseja salvar a arvore gerada
 void Grafo::arvoreMinimaKruskal(int num_vert, int subConj_vertices[], string arquivo)
 {
     if (direcionado)
@@ -307,9 +318,15 @@ void Grafo::arvoreMinimaKruskal(int num_vert, int subConj_vertices[], string arq
 
     arvMinimaKruskal->escreveArquivoDot(*arvMinimaKruskal, arquivo, "Kruskal");
 
-    cout << "A Arvore Geradora Minima obtida atraves do algoritmo de Kruskal foi salva em " << arquivo << endl;
+    cout << endl << "Arvore Geradora Minima - Kruskal";
+
+    arvMinimaKruskal->printGrafo();
+
+    cout << endl << "Obs: A Arvore Geradora Minima obtida atraves do algoritmo de Kruskal foi salva em " << arquivo << endl;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Ordena um vetor de aresta com base no peso dessas 
 void Grafo::QuickSort(Aresta arestas[], int p, int q)
 {
     if (p < q)
@@ -350,7 +367,12 @@ void Grafo::troca(Aresta *a, Aresta *b)
     *a = *b;
     *b = aux;
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//Encontra, através do algoritmo de Prim, a arvore geradora mínima de um subconjunto de vertices e
+//escreve esta no arquivo 'arquivo' com formato .dot
+//Recebe como parâmetro o número de vértices contidos no subconjunto (num_vert), o subconjunto de vértices
+//(subConj_vertices[]) e o nome do arquivo em que se deseja salvar a arvore gerada
 void Grafo::arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquivo)
 {
 
@@ -403,6 +425,7 @@ void Grafo::arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquiv
             saida << endl;
             saida << "}" << endl;
             saida.close();
+            cout << "A Arvore Geradora Minima obtida atraves do algoritmo de Prim foi salva em " << arquivo << endl;
         }
         else
         {
@@ -514,9 +537,18 @@ void Grafo::arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquiv
 
     arvMinimaPrim->escreveArquivoDot(*arvMinimaPrim, arquivo, "Prim");
 
-    cout << "A Arvore Geradora Minima obtida atraves do algoritmo de Prim foi salva em " << arquivo << endl;
+    cout << endl << "Arvore Geradora Minima - Prim:";
+
+    arvMinimaPrim->printGrafo();
+
+    cout << endl << "Obs: A Arvore Geradora Minima obtida atraves do algoritmo de Prim foi salva em " << arquivo << endl;
 }
 
+//Função utilizada pela função arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquivo) para calcular
+//dados dois vértices o peso, se existir, da aresta entre eles. Caso não exista, o peso entre elas é tido como infinito
+//(INT_MAX)
+//Recebe como parâmetro um vetor com todas as arestas de interesse (arestas[]), o id dos vértices (id1 e id2), para os 
+//quais se quer verificar o peso da aresta e o tamanho da lista de arestas(tamListaArestas)
 int Grafo::getPeso(Aresta arestas[], int id1, int id2, int tamListaArestas)
 {
     if (id1 == id2)
@@ -535,6 +567,8 @@ int Grafo::getPeso(Aresta arestas[], int id1, int id2, int tamListaArestas)
     return INT_MAX;
 }
 
+//Calcula o coeficiente de agrupamento local de um vértice.
+//Recebe como parâmetro o id do vértice(id_vert)
 float Grafo::coefAgrupLocal(int id_vert){
     No *v;
     try {
@@ -592,6 +626,7 @@ float Grafo::coefAgrupLocal(int id_vert){
     return float(numArestasExist)/numArestasTot;
 }
 
+//Calcula o coeficiente de agrupamento médio do grafo
 float Grafo::coefAgrupMedio(){
     float somaCoef = 0;
     No *v = primeiroNo;
@@ -613,8 +648,8 @@ No* Grafo::procurarNo(int id){
 
 Aresta* Grafo::existeAresta(int id ,int id_alvo){ // FUNCAO PARA ACHAR UMA ARESTA DADO DOIS VERTICES
     for (auto i = arestasGrafo.begin(); i != arestasGrafo.end(); i++){
-        Aresta* verificador = *i;
-        if(verificador->getId() == id && verificador->getId() == id_alvo){
+        Aresta* verificador = *i; 
+        if(verificador->getIdOrigem() == id && verificador->getId() == id_alvo){
             return verificador;
         }
     }
@@ -623,8 +658,8 @@ Aresta* Grafo::existeAresta(int id ,int id_alvo){ // FUNCAO PARA ACHAR UMA AREST
 }
 
 list<int> Grafo::caminhoMinimoDijkstra(int ID1, int ID2){
-    Dijkstra aux;
-    list<int> caminhoD = aux.caminhoMinimo(this, ID1, ID2);
+    Dijkstra* aux = new Dijkstra(this);
+    list<int> caminhoD = aux->caminhoMinimo(this, ID1, ID2);
     if(caminhoD.size()>0){
         cout << "Caminho minimo: ";
         for(auto i = caminhoD.begin(); i != caminhoD.end(); i++){
@@ -637,4 +672,9 @@ list<int> Grafo::caminhoMinimoDijkstra(int ID1, int ID2){
 void Grafo::caminhoMinimoFloyd(int ID1, int ID2){
     Floyd aux;
     aux.caminhoMinimo(this, ID1, ID2);
+}
+
+void Grafo::adicionaArestasGrafo(Aresta* novaAresta)
+{
+    arestasGrafo.push_back(novaAresta);
 }

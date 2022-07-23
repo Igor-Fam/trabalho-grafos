@@ -28,7 +28,7 @@ void Floyd::caminhoMinimo(Grafo *g,int noI,int noAlvo){
             if(i==j)
             F[i][j] = 0;
             else
-            F[i][j] = INFINITY;
+            F[i][j] = INT_MAX/2;
         }
     }
 for(auto i = g->nosGrafo.begin(); i != g->nosGrafo.end(); i++){

@@ -100,19 +100,19 @@ No *No::addNo(int id, int &vert_inseridos, float peso)
 
 void No::printArestas()
 {
-    cout << id;
+    cout << "Vertice: " << id;
     if (primeiraAresta == nullptr)
     {
         cout << " -|| ";
     }
     else
     {
-        cout << " -> ";
+        cout << " -> Vertices adjacentes: ";
         primeiraAresta->printList();
     }
     cout << endl;
     if (proxNo == nullptr)
-        cout << " -||" << endl;
+        cout << "Vertice: -||" << endl;
     else
         proxNo->printArestas();
 }
@@ -167,4 +167,33 @@ bool No::fechoTransitivoIndireto(int id, Grafo *g, set<int> *fti, set<int> *nosV
 void No::adicionaAdjacencia(int id_alvo)
 {
     this->ListAdj.push_back(id_alvo);
+}
+
+Aresta* No::retornaArestas()
+{
+    
+}
+
+void No::PreencheDist(unsigned int dist[], int tam, Grafo* g)
+{
+    list<No*> abertos;
+    for (auto k = g->nosGrafo.begin(); k != g->nosGrafo.end(); k++)
+    {
+        No* auxiliar = *k;
+        abertos.push_back(auxiliar);
+    }
+    abertos.remove(this);
+    for (auto i = this->ListAdj.begin(); i != this->ListAdj.end(); i++)
+    {
+        Aresta* ArestaAuxiliar = g->existeAresta(this->getId(), *i);
+        if(ArestaAuxiliar != nullptr)
+        {
+            float pesoAresta = ArestaAuxiliar->getPeso();
+            if(pesoAresta < dist[*i])
+            {
+                dist[*i] = pesoAresta;
+            }
+        }
+    }
+    
 }

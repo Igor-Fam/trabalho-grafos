@@ -21,6 +21,7 @@ private:
     friend class Grafo;
 
 public:
+    Aresta(int id,int id2, float peso);
     Aresta(int id, float peso = 0);
     Aresta(){};
     ~Aresta(){};
@@ -31,6 +32,7 @@ public:
     void setId_insercao(int idInsercao) { this->id_insercao = idInsercao; };
     float getPeso(){return this->peso;};
     int getId(){return id;};
+    int getIdOrigem() {return id_origem;};
 };
 
 #endif

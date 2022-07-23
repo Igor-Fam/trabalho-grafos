@@ -3,6 +3,7 @@
 #include "no.h"
 #include "aresta.h"
 #include "Grafo.h"
+#include "math.h"
 
 class Floyd{
     private:
