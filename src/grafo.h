@@ -32,6 +32,8 @@ private:
     void QuickSort(Aresta arestas[], int p, int q);
     int particionamento(Aresta arestas[], int p, int q);
     void troca(Aresta *a, Aresta *b);
+
+    void prof(int id, int visitado[], ofstream *saida);
     
     //Função utilizada pela função arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquivo) para calcular
     //dados dois vértices o peso, se existir, da aresta entre eles. Caso não exista, o peso entre elas é tido como infinito
@@ -94,6 +96,8 @@ list<Aresta*> arestasGrafo;
     list<int> caminhoMinimoDijkstra(int ID1, int ID2);
     void caminhoMinimoFloyd(int ID1, int ID2);
     void adicionaArestasGrafo(Aresta* novaAresta);
+
+    void buscaProf(int id, string arquivo);
 };
 
 #endif
