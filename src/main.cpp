@@ -159,6 +159,7 @@ cout << "tentando imprimir menu" << endl;
             switch (opcao)
             {
                 int id;
+                float cl, cm;
                 //Fecho transitivo direto
                 case 1:
                     id = leId(0);
@@ -172,11 +173,15 @@ cout << "tentando imprimir menu" << endl;
                 //Coeficiente de agrupamento local
                 case 3:
                     id = leId(0);
-                    cout << "Coefiente de agrupamento local do vertice de id " << id << ": " << g->coefAgrupLocal(id) << endl;
+                    cl = g->coefAgrupLocal(id);
+                    if (cl != -1)
+                        cout << "Coefiente de agrupamento local do vertice de id " << id << ": " << cl << endl;
                     break;
                 //Coeficiente de agrupamento medio
                 case 4:
-                    cout << "Coefiente de agrupamento medio do grafo: " << g->coefAgrupMedio() << endl;
+                    cm = g->coefAgrupMedio();
+                    if (cm != -1)
+                        cout << "Coefiente de agrupamento medio do grafo: " << cm << endl;
                     break;
                 //Caminho minimo Djkstra
                 case 5:{
@@ -215,6 +220,11 @@ cout << "tentando imprimir menu" << endl;
                 case 9: 
                     break;
                 default:
+                    if (opcao != 7 || opcao != 8)
+                    {
+                        cout << "Opcao invalida" << endl;
+                        break;
+                    }
                     int num_vert;
                     cout << "Numero de Vertices: ";
                     cin >> num_vert;

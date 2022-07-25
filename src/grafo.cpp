@@ -201,7 +201,7 @@ void Grafo::arvoreMinimaKruskal(int num_vert, int subConj_vertices[], string arq
     if (direcionado)
     {
         cout << "Erro: Grafo direcionado" << endl;
-        exit(1);
+        return;
     }
 
     No *subArvores[num_vert];
@@ -219,7 +219,7 @@ void Grafo::arvoreMinimaKruskal(int num_vert, int subConj_vertices[], string arq
         catch (const out_of_range &oor)
         {
             cout << "Erro: Nao existe vertice de id " << subConj_vertices[i] << " no grafo" << endl;
-            exit(1);
+            return;
         }
     }
 
@@ -379,7 +379,7 @@ void Grafo::arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquiv
     if (direcionado)
     {
         cout << "Erro: Grafo direcionado" << endl;
-        exit(1);
+        return;
     }
 
     Grafo *arvMinimaPrim = new Grafo(false);
@@ -406,7 +406,7 @@ void Grafo::arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquiv
         catch (const out_of_range &oor)
         {
             cout << "Erro: Nao existe vertice de id " << subConj_vertices[i] << " no grafo" << endl;
-            exit(1);
+            return;
         }
     }
 
@@ -575,7 +575,7 @@ float Grafo::coefAgrupLocal(int id_vert){
         v = mapa.at(id_vert);
     } catch (const out_of_range &oor){
         cout << "Erro: Nao existe vertice de id " << id_vert << " no grafo" << endl;
-        exit(1);
+        return -1.f;
     }
     int numArestasTot;
     int num_vAdj;
@@ -619,9 +619,11 @@ float Grafo::coefAgrupLocal(int id_vert){
     }
 
     if (numArestasTot == 0){
+        /*
         cout << "Erro: o vertice de id " << id_vert << " possui um unico vertice adjacente. Portanto, nao foi possivel " << 
         "calcular o coeficiente de agrupamento deste (divisao por zero)" << endl;
-        exit(1); 
+        */
+       return 0.f;
     }
     return float(numArestasExist)/numArestasTot;
 }
@@ -630,8 +632,13 @@ float Grafo::coefAgrupLocal(int id_vert){
 float Grafo::coefAgrupMedio(){
     float somaCoef = 0;
     No *v = primeiroNo;
+    bool erro = false;
     while (v != NULL){
-        somaCoef += coefAgrupLocal(v->id);
+        float c = coefAgrupLocal(v->id);
+        if (c == -1){
+            return -1.f;
+        }
+        somaCoef += c;
         v = v->proxNo;
     }
     return somaCoef/ordem;
