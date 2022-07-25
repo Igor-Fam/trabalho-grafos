@@ -220,11 +220,12 @@ cout << "tentando imprimir menu" << endl;
                 case 9: 
                     break;
                 default:
-                    if (opcao != 7 || opcao != 8)
+                    if (opcao != 7 && opcao != 8)
                     {
                         cout << "Opcao invalida" << endl;
                         break;
                     }
+                    else {
                     int num_vert;
                     cout << "Numero de Vertices: ";
                     cin >> num_vert;
@@ -243,6 +244,7 @@ cout << "tentando imprimir menu" << endl;
                     else 
                         g->arvoreMinimaKruskal(num_vert, subConj_vertices, argv[2]);
                     break;
+                    }
             }
             imprimeMenu();
         } 
