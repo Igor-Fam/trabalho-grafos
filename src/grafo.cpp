@@ -1,3 +1,4 @@
+
 #include "grafo.h"
 #include <iostream>
 #include <fstream>
@@ -661,6 +662,10 @@ Aresta* Grafo::existeAresta(int id ,int id_alvo){ // FUNCAO PARA ACHAR UMA AREST
             return verificador;
         }
     }
+<<<<<<< HEAD
+=======
+    //cout << "Nao existe essa aresta no grafo." << endl;
+>>>>>>> 385f9d4c77f669f55a6cddc5646cba7d8b606347
     return NULL;
 }
 
@@ -682,7 +687,115 @@ void Grafo::caminhoMinimoFloyd(int ID1, int ID2){
     aux.caminhoMinimo(this, ID1, ID2);
 }
 
-void Grafo::adicionaArestasGrafo(Aresta* novaAresta)
+void Grafo::adicionaArestasGrafo(Aresta *novaAresta)
 {
     arestasGrafo.push_back(novaAresta);
+}
+
+void Grafo::prof(int id, int visitado[], ofstream *saida)
+{
+    No *v = NULL;
+    try
+    {
+        v = mapa.at(id);
+    }
+    catch (const out_of_range &oor)
+    {
+        cout << "Erro: Nao existe vertice de id " << id << " no grafo" << endl;
+        return;
+    }
+    visitado[v->id_insercao] = 1;
+    Aresta *a = v->primeiraAresta;
+    while (a != NULL)
+    {
+        No *n = NULL;
+        try
+        {
+            n = mapa.at(a->getId());
+        }
+        catch (const out_of_range &oor)
+        {
+            cout << "Erro: Nao existe vertice de id " << id << " no grafo" << endl;
+            return;
+        }
+        if (visitado[n->id_insercao] == 0)
+        {
+            cout << "(" << id << "," << a->getId() << ") - Aresta" << endl;
+            if (!direcionado)
+                *saida << id << " -- " << a->getId();
+            else
+                *saida << id << " -> " << a->getId();
+
+            if (peso_aresta)
+            {
+                *saida << " [label=" << a->getPeso() << "]";
+            }
+            *saida << endl;
+            prof(a->getId(), visitado, saida);
+        }
+        else
+        {
+            if (visitado[n->id_insercao] == -1)
+            {
+                cout << "(" << id << "," << a->getId() << ") - Aresta de Retorno" << endl;
+                if (!direcionado)
+                    *saida << id << " -- " << a->getId() << "[style=dotted]";
+                else
+                    *saida << id << " -> " << a->getId() << "[style=dotted]";
+
+                if (direcionado && existeAresta(a->getId(), id)){
+                    cout << "(" << id << "," << a->getId() << ") Aresta de Retorno " << endl;
+                    if (!direcionado)
+                        *saida << a->getId() << " -- " << id << "[style=dotted]";
+                    else
+                        *saida << a->getId() << " -> " << id << "[style=dotted]";
+                }
+
+                if (peso_aresta)
+                {
+                    *saida << " [label=" << a->getPeso() << "]";
+                }
+                *saida << endl;
+            }
+        }
+        a = a->proxAresta;
+    }
+    visitado[v->id_insercao] = -1;
+}
+
+void Grafo::buscaProf(int id, string arquivo)
+{
+    int visitado[ordem];
+    for (int i = 0; i < ordem; i++)
+    {
+        visitado[i] = 0;
+    }
+    ofstream saida;
+    saida.open(arquivo, ios::out);
+    if (saida.is_open())
+    {
+        if (!direcionado)
+            saida << "graph "
+                  << "G"
+                  << "{" << endl;
+        else
+            saida << "digraph "
+                  << "G"
+                  << "{" << endl;
+        int i = 0;
+        prof(id, visitado, &saida);
+        for (No *v = primeiroNo; v != NULL; v = v->proxNo)
+        {   
+            if (visitado[i] == 0) {
+                prof(v->getId(), visitado, &saida);
+            }
+            i++;
+        }
+        saida << "}" << endl;
+        saida.close();
+    }
+    else
+    {
+        cout << "Erro ao abrir arquivo" << endl;
+    }
 }

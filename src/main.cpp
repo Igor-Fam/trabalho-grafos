@@ -229,6 +229,10 @@ cout << "tentando imprimir menu" << endl;
                     
                 //Caminhamento em profundidade
                 case 9: 
+                    cout << "Id do vertice: ";
+                    cin >> id;
+
+                    g->buscaProf(id, argv[2]);
                     break;
                 default:
                     if (opcao != 7 && opcao != 8)
