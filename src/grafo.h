@@ -39,7 +39,6 @@ private:
     int getPeso(Aresta arestas[], int id, int id_origem, int tamListaArestas);
 
 public:
-
 list<No*> nosGrafo;
 list<Aresta*> arestasGrafo;
  
