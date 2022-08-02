@@ -655,18 +655,23 @@ No* Grafo::procurarNo(int id){
 }
 
 Aresta* Grafo::existeAresta(int id ,int id_alvo){ // FUNCAO PARA ACHAR UMA ARESTA DADO DOIS VERTICES
-    for (auto i = arestasGrafo.begin(); i != arestasGrafo.end(); i++){
+    for (auto i = this->arestasGrafo.begin(); i != this->arestasGrafo.end(); i++)
+    {
         Aresta* verificador = *i; 
         if(verificador->getIdOrigem() == id && verificador->getId() == id_alvo){
             return verificador;
         }
     }
+<<<<<<< HEAD
+=======
     //cout << "Nao existe essa aresta no grafo." << endl;
+>>>>>>> 385f9d4c77f669f55a6cddc5646cba7d8b606347
     return NULL;
 }
 
 list<int> Grafo::caminhoMinimoDijkstra(int ID1, int ID2){
     Dijkstra* aux = new Dijkstra(this);
+    cout<< "entrei no grafo"<<endl;
     list<int> caminhoD = aux->caminhoMinimo(this, ID1, ID2);
     if(caminhoD.size()>0){
         cout << "Caminho minimo: ";

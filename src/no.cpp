@@ -29,13 +29,13 @@ bool No::noExiste(int id)
 
 bool No::addAresta(int id1, int id2, int arestas_inseridas, float peso)
 {
-    adicionaAdjacencia(id2);
+    
     // cout << id1 << " " << id2 << " " << arestas_inseridas << endl;
     if (this->id == id1)
     {
         if (primeiraAresta == nullptr)
         {
-            Aresta *newAresta = new Aresta(id2, peso);
+            Aresta *newAresta = new Aresta(this->id,id2, peso);
             primeiraAresta = newAresta;
             primeiraAresta->setId_insercao(arestas_inseridas);
             return true;

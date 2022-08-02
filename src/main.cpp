@@ -1,4 +1,6 @@
 #include <iostream>
+#include <queue>
+#include <list>
 #include <fstream>
 #include <cstring>
 #include <cfloat>
@@ -66,7 +68,7 @@ int* leIds(int &num_vert){
 int main(int argc, char **argv)
 {
 
-    bool dir, peso_aresta, peso_vertice;
+    bool dir= false, peso_aresta= false, peso_vertice=false;
     bool invalido = false;
         
     for (int i = 3;i <= 5; i++)
@@ -112,32 +114,35 @@ int main(int argc, char **argv)
     {
         string str;
 
-        getline(arq_ent, str);
+        int num_vert;
+        arq_ent >> num_vert;
 
-        int num_vert = stoi(str);
         g->setOrdem(num_vert);
 
         while (!arq_ent.eof())
         {
-            getline(arq_ent, str);
-
+        
             int id1, id2, p_a = 0 /*, p_v = 0*/;
 
-            separaDadoArqEnt(str, id1);
-            separaDadoArqEnt(str, id2);
-            if (peso_aresta)
+            arq_ent >> id1;
+            arq_ent >> id2;
+            if (peso_aresta == true)
             {
-                separaDadoArqEnt(str, p_a);
+                arq_ent >>  p_a;
             }
 
             g->addNo(id1);
             g->addNo(id2);
             g->addAresta(id1, id2, p_a);
             Aresta* novaAresta = new Aresta(id1, id2, p_a);
-            cout<< "criando aresta entre: " << id1 << " e " << id2 << endl;
             g->adicionaArestasGrafo(novaAresta);
             No* noid1 = g->procurarNo(id1);
             noid1->adicionaAdjacencia(id2);
+            if(dir == 1)
+            {
+                No* noid2 = g->procurarNo(id2);
+                noid2->adicionaAdjacencia(id1);
+            }
 
         }
 
@@ -185,14 +190,20 @@ cout << "tentando imprimir menu" << endl;
                     break;
                 //Caminho minimo Djkstra
                 case 5:{
-                if(peso_aresta){
+                if(peso_aresta == true){
                 int no1, no2;
                 cout << endl << "Informe o id do Vertice inicial: ";
                 cin >> no1;
                 cout << "Informe o id do Vertice alvo: ";
                 cin >> no2;
                 if(g->procurarNo(no1) && g->procurarNo(no2)){
-                    list<int> apenasImpressao = g->caminhoMinimoDijkstra(no1, no2);
+                    No* aux = g->procurarNo(no2);
+                    if(aux->getGrauEntrada() != 0)
+                    {    cout << "criando caminho minimo 5 main.cpp " << endl;
+                        list<int> apenasImpressao = g->caminhoMinimoDijkstra(no1, no2);
+                    }
+                    else
+                    cout << "O no não tem grau de entrada" << endl;
                 } else
                     cout << "Id do vertice não encontrado." << endl;
             } else
