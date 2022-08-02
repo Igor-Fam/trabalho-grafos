@@ -27,36 +27,40 @@ bool comparaStrings(const char *str1, const char *str2)
     return false;
 }
 
-void imprimeMenu(){
-    cout << endl << "Escolha a funcionalidade desejada: " << endl
-        << "1. Fecho Transitivo Direto" << endl
-        << "2. Fecho Transitivo Indireto" << endl
-        << "3. Coeficiente de Agrupamento Local de um Vertice" << endl
-        << "4. Coeficiente de Agrupamento Medio do Grafo" << endl
-        << "5. Caminho minimo entre dois vertices usando algoritmo de Djkstra" << endl
-        << "6. Caminho minimo entre dois vertices usando algoritmo de Floyd" << endl
-        << "7. Arvore Geradora Minima usando o algoritmo de Prim" << endl
-        << "8. Arvore Geradora Minima usando o algoritmo de Kruskal" << endl
-        << "9. Arvore dada pela ordem de caminhamento em profundidade" << endl
-        << "10. Sair" << endl;
+void imprimeMenu()
+{
+    cout << endl
+         << "Escolha a funcionalidade desejada: " << endl
+         << "1. Fecho Transitivo Direto" << endl
+         << "2. Fecho Transitivo Indireto" << endl
+         << "3. Coeficiente de Agrupamento Local de um Vertice" << endl
+         << "4. Coeficiente de Agrupamento Medio do Grafo" << endl
+         << "5. Caminho minimo entre dois vertices usando algoritmo de Djkstra" << endl
+         << "6. Caminho minimo entre dois vertices usando algoritmo de Floyd" << endl
+         << "7. Arvore Geradora Minima usando o algoritmo de Prim" << endl
+         << "8. Arvore Geradora Minima usando o algoritmo de Kruskal" << endl
+         << "9. Arvore dada pela ordem de caminhamento em profundidade" << endl
+         << "10. Sair" << endl;
     return;
 }
 
-int leId(int indice){
+int leId(int indice)
+{
     int id;
     if (indice == 0)
         cout << "Id do Vertice: ";
-    else 
+    else
         cout << "Id do Vertice " << indice << ": ";
     cin >> id;
     return id;
 }
 
-int* leIds(int &num_vert){
+int *leIds(int &num_vert)
+{
     cout << "Numero de Vertices: ";
     cin >> num_vert;
 
-    int *subConj_vertices = new int [num_vert];
+    int *subConj_vertices = new int[num_vert];
 
     for (int i = 0; i < num_vert; i++)
     {
@@ -68,10 +72,10 @@ int* leIds(int &num_vert){
 int main(int argc, char **argv)
 {
 
-    bool dir= false, peso_aresta= false, peso_vertice=false;
+    bool dir = false, peso_aresta = false, peso_vertice = false;
     bool invalido = false;
-        
-    for (int i = 3;i <= 5; i++)
+
+    for (int i = 3; i <= 5; i++)
     {
         if (argv[i] != NULL)
         {
@@ -90,7 +94,7 @@ int main(int argc, char **argv)
             else if (!invalido && i == 5)
                 if (peso_aresta && parametro)
                 {
-                    cout << "Não é possível atribuir peso às arestas e aos vértices simultaneamente"<< endl;
+                    cout << "Não é possível atribuir peso às arestas e aos vértices simultaneamente" << endl;
                     exit(1);
                 }
                 else
@@ -98,7 +102,7 @@ int main(int argc, char **argv)
         }
         if (argv[i] == NULL || invalido)
         {
-    
+
             cout << "Argumento passado pela linha de comando inválido ou faltante" << endl;
             exit(1);
         }
@@ -121,29 +125,28 @@ int main(int argc, char **argv)
 
         while (!arq_ent.eof())
         {
-        
+
             int id1, id2, p_a = 0 /*, p_v = 0*/;
 
             arq_ent >> id1;
             arq_ent >> id2;
             if (peso_aresta == true)
             {
-                arq_ent >>  p_a;
+                arq_ent >> p_a;
             }
 
             g->addNo(id1);
             g->addNo(id2);
             g->addAresta(id1, id2, p_a);
-            Aresta* novaAresta = new Aresta(id1, id2, p_a);
+            Aresta *novaAresta = new Aresta(id1, id2, p_a);
             g->adicionaArestasGrafo(novaAresta);
-            No* noid1 = g->procurarNo(id1);
+            No *noid1 = g->procurarNo(id1);
             noid1->adicionaAdjacencia(id2);
-            if(dir == 1)
+            if (dir == 1)
             {
-                No* noid2 = g->procurarNo(id2);
+                No *noid2 = g->procurarNo(id2);
                 noid2->adicionaAdjacencia(id1);
             }
-
         }
 
         arq_ent.close();
@@ -153,94 +156,106 @@ int main(int argc, char **argv)
         cout << "Erro ao abrir o arquivo de entrada" << endl;
         exit(1);
     }
-cout << "tentando imprimir menu" << endl;
+    cout << "tentando imprimir menu" << endl;
     imprimeMenu();
     int opcao;
-    do {
+    do
+    {
         cout << "Opcao: ";
         cin >> opcao;
 
-        if (opcao != 10){
+        if (opcao != 10)
+        {
             switch (opcao)
             {
                 int id;
                 float cl, cm;
-                //Fecho transitivo direto
-                case 1:
-                    id = leId(0);
-                    g->fechoTransitivoDireto(id);
-                    break;
-                //Fecho transitivo indireto
-                case 2:
-                    id = leId(0);
-                    g->fechoTransitivoIndireto(id);
-                    break;
-                //Coeficiente de agrupamento local
-                case 3:
-                    id = leId(0);
-                    cl = g->coefAgrupLocal(id);
-                    if (cl != -1)
-                        cout << "Coefiente de agrupamento local do vertice de id " << id << ": " << cl << endl;
-                    break;
-                //Coeficiente de agrupamento medio
-                case 4:
-                    cm = g->coefAgrupMedio();
-                    if (cm != -1)
-                        cout << "Coefiente de agrupamento medio do grafo: " << cm << endl;
-                    break;
-                //Caminho minimo Djkstra
-                case 5:{
-                if(peso_aresta == true){
-                int no1, no2;
-                cout << endl << "Informe o id do Vertice inicial: ";
-                cin >> no1;
-                cout << "Informe o id do Vertice alvo: ";
-                cin >> no2;
-                if(g->procurarNo(no1) && g->procurarNo(no2)){
-                    No* aux = g->procurarNo(no2);
-                    if(aux->getGrauEntrada() != 0)
-                    {    cout << "criando caminho minimo 5 main.cpp " << endl;
-                        list<int> apenasImpressao = g->caminhoMinimoDijkstra(no1, no2);
+            // Fecho transitivo direto
+            case 1:
+                id = leId(0);
+                g->fechoTransitivoDireto(id);
+                break;
+            // Fecho transitivo indireto
+            case 2:
+                id = leId(0);
+                g->fechoTransitivoIndireto(id);
+                break;
+            // Coeficiente de agrupamento local
+            case 3:
+                id = leId(0);
+                cl = g->coefAgrupLocal(id);
+                if (cl != -1)
+                    cout << "Coefiente de agrupamento local do vertice de id " << id << ": " << cl << endl;
+                break;
+            // Coeficiente de agrupamento medio
+            case 4:
+                cm = g->coefAgrupMedio();
+                if (cm != -1)
+                    cout << "Coefiente de agrupamento medio do grafo: " << cm << endl;
+                break;
+            // Caminho minimo Djkstra
+            case 5:
+            {
+                if (peso_aresta == true)
+                {
+                    int no1, no2;
+                    cout << "Informe o id do Vertice inicial: ";
+                    cin >> no1;
+                    cout << "Informe o id do Vertice alvo: ";
+                    cin >> no2;
+                    if (g->procurarNo(no1) && g->procurarNo(no2))
+                    {
+                        No *aux = g->procurarNo(no2);
+                        if (aux->getGrauEntrada() != 0)
+                        {
+                            //cout << "criando caminho minimo 5 main.cpp " << endl;
+                            list <int> apenasImpressao = g->caminhoMinimoDijkstra(no1, no2);
+                        }
+                        else
+                            cout << "O no não tem grau de entrada" << endl;
                     }
                     else
-                    cout << "O no não tem grau de entrada" << endl;
-                } else
-                    cout << "Id do vertice não encontrado." << endl;
-            } else
-                cout << "O grafo nao esta ponderado. Nao eh possivel executar o algoritimo." << endl;
+                        cout << "Id do vertice não encontrado." << endl;
+                }
+                else
+                    cout << "O grafo nao esta ponderado. Nao eh possivel executar o algoritimo." << endl;
+                break;
+            }
+            // Caminho minimo Floyd
+            case 6:
+            {
+                if (peso_aresta)
+                {
+                    int no1, no2;
+                    cout << "Informe o id do Vertice inicial: ";
+                    cin >> no1;
+                    cout << "Informe o id do Vertice alvo: ";
+                    cin >> no2;
+                    g->floyd(no1, no2);
+                    /*if(g->procurarNo(no1) && g->procurarNo(no2))
+                        g->caminhoMinimoFloyd(no1, no2);
+                    else
+                        cout << "Id do vertice não encontrado." << endl;*/
+                }
+                else
+                    cout << "O grafo nao esta ponderado. Nao eh possivel executar o algoritimo." << endl;
+                break;
+            }
+            // Caminhamento em profundidade
+            case 9:
+                cout << "Id do vertice: ";
+                cin >> id;
+
+                g->buscaProf(id, argv[2]);
+                break;
+            default:
+                if (opcao != 7 && opcao != 8)
+                {
+                    cout << "Opcao invalida" << endl;
                     break;
                 }
-                //Caminho minimo Floyd
-                case 6:{
-            if(peso_aresta){
-                int no1, no2;
-                cout << "Informe o id do Vertice inicial: ";
-                cin >> no1;
-                cout << "Informe o id do Vertice alvo: ";
-                cin >> no2;
-                if(g->procurarNo(no1) && g->procurarNo(no2))
-                    g->caminhoMinimoFloyd(no1, no2);
                 else
-                    cout << "Id do vertice não encontrado." << endl;
-            } else
-                cout << "O grafo nao esta ponderado. Nao eh possivel executar o algoritimo." << endl; 
-            break;
-        }
-                    
-                //Caminhamento em profundidade
-                case 9: 
-                    cout << "Id do vertice: ";
-                    cin >> id;
-
-                    g->buscaProf(id, argv[2]);
-                    break;
-                default:
-                    if (opcao != 7 && opcao != 8)
-                    {
-                        cout << "Opcao invalida" << endl;
-                        break;
-                    }
-                    else {
+                {
                     int num_vert;
                     cout << "Numero de Vertices: ";
                     cin >> num_vert;
@@ -252,20 +267,19 @@ cout << "tentando imprimir menu" << endl;
                         subConj_vertices[i] = leId((i + 1));
                     }
 
-                    //Arvore Geradora minima Prim
+                    // Arvore Geradora minima Prim
                     if (opcao == 7)
                         g->arvoreMinimaPrim(num_vert, subConj_vertices, argv[2]);
-                    //Arvore Geradora minima Kruskal
-                    else 
+                    // Arvore Geradora minima Kruskal
+                    else
                         g->arvoreMinimaKruskal(num_vert, subConj_vertices, argv[2]);
                     break;
-                    }
+                }
             }
             imprimeMenu();
-        } 
-        
+        }
 
-    } while(opcao != 10);
+    } while (opcao != 10);
 
     // Link para download do graphviz: https://graphviz.org/download/
     // Após o download:

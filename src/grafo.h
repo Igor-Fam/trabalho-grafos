@@ -97,6 +97,7 @@ list<Aresta*> arestasGrafo;
     void adicionaArestasGrafo(Aresta* novaAresta);
 
     void buscaProf(int id, string arquivo);
+    void floyd(int no1, int no2);
 };
 
 #endif

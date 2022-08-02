@@ -169,11 +169,6 @@ void No::adicionaAdjacencia(int id_alvo)
     this->ListAdj.push_back(id_alvo);
 }
 
-Aresta* No::retornaArestas()
-{
-    
-}
-
 void No::PreencheDist(unsigned int dist[], int tam, Grafo* g)
 {
     list<No*> abertos;

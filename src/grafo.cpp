@@ -71,8 +71,8 @@ void Grafo::addAresta(int id1, int id2, float peso)
     else
     {
         auxAddAresta(id1, id2, peso);
-        mapa.at(id1)->addGrauEntrada();
-        mapa.at(id2)->addGrauSaida();
+        mapa.at(id1)->addGrauSaida();
+        mapa.at(id2)->addGrauEntrada();
     }
     this->arestas_inseridas += 1;
 }
@@ -809,5 +809,87 @@ void Grafo::buscaProf(int id, string arquivo)
     else
     {
         cout << "Erro ao abrir arquivo" << endl;
+    }
+}
+
+void Grafo::floyd(int id1, int id2)
+{
+
+    No *v1 = NULL;
+    No *v2 = NULL;
+
+    try
+    {
+        v1 = mapa.at(id1);
+    }
+    catch (const out_of_range &oor)
+    {
+        cout << "Erro: Nao existe vertice de id " << id1 << " no grafo" << endl;
+        return;
+    }
+
+    try
+    {
+        v2 = mapa.at(id2);
+    }
+    catch (const out_of_range &oor)
+    {
+        cout << "Erro: Nao existe vertice de id " << id2 << " no grafo" << endl;
+        return;
+    }
+
+    int A[ordem][ordem];
+
+    for(int i = 0; i < ordem; i++)
+    {
+        for(int j = 0; j < ordem; j++)
+        {
+            A[i][j] = INT_MAX;
+        }
+    }
+
+    Aresta* a;
+
+    for(No *i = primeiroNo; i != NULL; i = i->proxNo)
+    {
+        a = i->primeiraAresta;
+        
+        while(a != NULL)
+        {
+            for (No *j = primeiroNo; j != NULL; j = j->proxNo)
+            {
+                if(i->id_insercao == j->id_insercao)
+                {
+                    A[i->id_insercao][j->id_insercao] = 0;
+                }
+                else if(a->id == j->id)
+                {
+                    A[i->id_insercao][j->id_insercao] = a->getPeso();
+                }
+            }
+            a = a->proxAresta;
+        }
+    }
+
+    for(No *i = primeiroNo; i != NULL; i = i->proxNo)
+    {
+        for(No *j = primeiroNo; j != NULL; j = j->proxNo)
+        {
+            for(No *k = primeiroNo; k != NULL; k = k->proxNo)
+            {
+                if(A[j->id_insercao][i->id_insercao] != INT_MAX && A[i->id_insercao][k->id_insercao] != INT_MAX && A[j->id_insercao][i->id_insercao] + A[i->id_insercao][k->id_insercao] < A[j->id_insercao][k->id_insercao])
+                    A[j->id_insercao][k->id_insercao] = A[j->id_insercao][i->id_insercao] + A[i->id_insercao][k->id_insercao];
+            }
+        }
+    }
+
+    if(A[v1->id_insercao][v2->id_insercao] == INT_MAX)
+    {
+        cout << "Nao existe caminho de " << id1 << " a " << id2 << endl;
+        return;
+    }
+    else
+    {
+        cout << "Custo do Caminho Minimo: " << A[v1->id_insercao][v2->id_insercao] << " ";
     }
 }
