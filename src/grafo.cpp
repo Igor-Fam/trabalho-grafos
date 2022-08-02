@@ -726,6 +726,18 @@ void Grafo::prof(int id, int visitado[], ofstream *saida)
                 *saida << " [label=" << a->getPeso() << "]";
             }
             *saida << endl;
+            if (direcionado && existeAresta(a->getId(), id)){
+                cout << "(" << id << "," << a->getId() << ") Aresta de Retorno " << endl;
+                if (!direcionado)
+                    *saida << a->getId() << " -- " << id << "[style=dotted]";
+                else
+                    *saida << a->getId() << " -> " << id << "[style=dotted]";                    
+                if (peso_aresta)
+                {
+                    *saida << " [label=" << a->getPeso() << "]";
+                }
+                *saida << endl;
+            }
             prof(a->getId(), visitado, saida);
         }
         else
@@ -737,6 +749,11 @@ void Grafo::prof(int id, int visitado[], ofstream *saida)
                     *saida << id << " -- " << a->getId() << "[style=dotted]";
                 else
                     *saida << id << " -> " << a->getId() << "[style=dotted]";
+                if (peso_aresta)
+                {
+                    *saida << " [label=" << a->getPeso() << "]";
+                }
+                *saida << endl;
 
                 if (direcionado && existeAresta(a->getId(), id)){
                     cout << "(" << id << "," << a->getId() << ") Aresta de Retorno " << endl;
@@ -744,13 +761,12 @@ void Grafo::prof(int id, int visitado[], ofstream *saida)
                         *saida << a->getId() << " -- " << id << "[style=dotted]";
                     else
                         *saida << a->getId() << " -> " << id << "[style=dotted]";
+                    if (peso_aresta)
+                    {
+                        *saida << " [label=" << a->getPeso() << "]";
+                    }
+                    *saida << endl;
                 }
-
-                if (peso_aresta)
-                {
-                    *saida << " [label=" << a->getPeso() << "]";
-                }
-                *saida << endl;
             }
         }
         a = a->proxAresta;
