@@ -662,10 +662,6 @@ Aresta* Grafo::existeAresta(int id ,int id_alvo){ // FUNCAO PARA ACHAR UMA AREST
             return verificador;
         }
     }
-<<<<<<< HEAD
-=======
-    //cout << "Nao existe essa aresta no grafo." << endl;
->>>>>>> 385f9d4c77f669f55a6cddc5646cba7d8b606347
     return NULL;
 }
 
