@@ -28,22 +28,22 @@ private:
     bool noExiste(int id);
     friend class Aresta;
 
-    //Ordena um vetor de aresta com base no peso dessas 
+    // Ordena um vetor de aresta com base no peso dessas
     void QuickSort(Aresta arestas[], int p, int q);
     int particionamento(Aresta arestas[], int p, int q);
     void troca(Aresta *a, Aresta *b);
 
     void prof(int id, int visitado[], ofstream *saida);
-    
-    //Função utilizada pela função arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquivo) para calcular
-    //dados dois vértices o peso, se existir, da aresta entre eles. Caso não exista, o peso entre elas é tido como infinito
+
+    // Função utilizada pela função arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquivo) para calcular
+    // dados dois vértices o peso, se existir, da aresta entre eles. Caso não exista, o peso entre elas é tido como infinito
     //(INT_MAX)
     int getPeso(Aresta arestas[], int id, int id_origem, int tamListaArestas);
 
 public:
-list<No*> nosGrafo;
-list<Aresta*> arestasGrafo;
- 
+    list<No *> nosGrafo;
+    list<Aresta *> arestasGrafo;
+
     Grafo()
     {
         primeiroNo = nullptr;
@@ -69,32 +69,32 @@ list<Aresta*> arestasGrafo;
     void fechoTransitivoDireto(int id);
     void fechoTransitivoIndireto(int id);
     void setOrdem(int ordemGrafo) { ordem = ordemGrafo; };
-    int getOrdem(){return ordem;}
+    int getOrdem() { return ordem; }
     int getVert_inseridos() { return vert_inseridos; };
     void setPesoAresta(bool pesoAresta) { this->peso_aresta = pesoAresta; };
 
-    //Escreve no arquivo 'arquivoSaida' de formato .dot o Grafo 'G' de nome 'nome',
-    //onde 'arquivoSaida', 'G', e 'nome' são passados por parâmetro
+    // Escreve no arquivo 'arquivoSaida' de formato .dot o Grafo 'G' de nome 'nome',
+    // onde 'arquivoSaida', 'G', e 'nome' são passados por parâmetro
     void escreveArquivoDot(Grafo G, string arquivoSaida, string nome);
 
-    //Encontra, através do algoritmo de Kruskal, a arvore geradora mínima de um subconjunto de vertices e
-    //escreve esta no arquivo 'arquivo' com formato .dot
+    // Encontra, através do algoritmo de Kruskal, a arvore geradora mínima de um subconjunto de vertices e
+    // escreve esta no arquivo 'arquivo' com formato .dot
     void arvoreMinimaKruskal(int num_vert, int subConj_vertices[], string arquivo);
 
-    //Encontra, através do algoritmo de Prim, a arvore geradora mínima de um subconjunto de vertices e
-    //escreve esta no arquivo 'arquivo' com formato .dot
+    // Encontra, através do algoritmo de Prim, a arvore geradora mínima de um subconjunto de vertices e
+    // escreve esta no arquivo 'arquivo' com formato .dot
     void arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquivo);
 
-    //Calcula o coeficiente de agrupamento local de um vértice.
+    // Calcula o coeficiente de agrupamento local de um vértice.
     float coefAgrupLocal(int id_vert);
 
-    //Calcula o coeficiente de agrupamento médio do grafo
+    // Calcula o coeficiente de agrupamento médio do grafo
     float coefAgrupMedio();
-    No* procurarNo(int id);
-    Aresta* existeAresta(int id, int id_alvo);
+    No *procurarNo(int id);
+    Aresta *existeAresta(int id, int id_alvo);
     list<int> caminhoMinimoDijkstra(int ID1, int ID2);
     void caminhoMinimoFloyd(int ID1, int ID2);
-    void adicionaArestasGrafo(Aresta* novaAresta);
+    void adicionaArestasGrafo(Aresta *novaAresta);
 
     void buscaProf(int id, string arquivo);
     void floyd(int no1, int no2);

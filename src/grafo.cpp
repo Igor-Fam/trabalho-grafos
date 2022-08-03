@@ -5,8 +5,8 @@
 #include <climits>
 #include <unordered_map>
 #include <set>
-#include "Dijkstra.h"
-#include "Floyd.h"
+#include "dijkstra.h"
+#include "floyd.h"
 #include "math.h"
 
 using namespace std;
@@ -48,11 +48,11 @@ void Grafo::addNo(int id, float peso)
 {
     No *n = auxAddNo(id, peso);
 
-    if (n != nullptr){
+    if (n != nullptr)
+    {
         mapa[id] = n;
         nosGrafo.push_back(n);
     }
-        
 }
 
 void Grafo::addAresta(int id1, int id2, float peso)
@@ -147,8 +147,8 @@ void Grafo::fechoTransitivoIndireto(int id)
     delete fti, nosVisitados;
 }
 
-//Escreve no arquivo 'arquivoSaida' de formato .dot o Grafo 'G' de nome 'nome',
-//onde 'arquivoSaida', 'G', e 'nome' são passados por parâmetro
+// Escreve no arquivo 'arquivoSaida' de formato .dot o Grafo 'G' de nome 'nome',
+// onde 'arquivoSaida', 'G', e 'nome' são passados por parâmetro
 void Grafo::escreveArquivoDot(Grafo G, string arquivoSaida, string nome)
 {
     ofstream saida;
@@ -167,7 +167,7 @@ void Grafo::escreveArquivoDot(Grafo G, string arquivoSaida, string nome)
     {
         Aresta *a = v->primeiraAresta;
         while (a != NULL)
-        {   
+        {
             if (adicionado[a->id_insercao] == false)
             {
                 if (!direcionado)
@@ -193,9 +193,9 @@ void Grafo::escreveArquivoDot(Grafo G, string arquivoSaida, string nome)
     saida << "}" << endl;
 }
 
-//Encontra, através do algoritmo de Kruskal, a arvore geradora mínima de um subconjunto de vertices e
-//escreve esta no arquivo 'arquivo' com formato .dot
-//Recebe como parâmetro o número de vértices contidos no subconjunto (num_vert), o subconjunto de vértices
+// Encontra, através do algoritmo de Kruskal, a arvore geradora mínima de um subconjunto de vertices e
+// escreve esta no arquivo 'arquivo' com formato .dot
+// Recebe como parâmetro o número de vértices contidos no subconjunto (num_vert), o subconjunto de vértices
 //(subConj_vertices[]) e o nome do arquivo em que se deseja salvar a arvore gerada
 void Grafo::arvoreMinimaKruskal(int num_vert, int subConj_vertices[], string arquivo)
 {
@@ -319,15 +319,17 @@ void Grafo::arvoreMinimaKruskal(int num_vert, int subConj_vertices[], string arq
 
     arvMinimaKruskal->escreveArquivoDot(*arvMinimaKruskal, arquivo, "Kruskal");
 
-    cout << endl << "Arvore Geradora Minima - Kruskal";
+    cout << endl
+         << "Arvore Geradora Minima - Kruskal";
 
     arvMinimaKruskal->printGrafo();
 
-    cout << endl << "Obs: A Arvore Geradora Minima obtida atraves do algoritmo de Kruskal foi salva em " << arquivo << endl;
+    cout << endl
+         << "Obs: A Arvore Geradora Minima obtida atraves do algoritmo de Kruskal foi salva em " << arquivo << endl;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Ordena um vetor de aresta com base no peso dessas 
+// Ordena um vetor de aresta com base no peso dessas
 void Grafo::QuickSort(Aresta arestas[], int p, int q)
 {
     if (p < q)
@@ -370,9 +372,9 @@ void Grafo::troca(Aresta *a, Aresta *b)
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//Encontra, através do algoritmo de Prim, a arvore geradora mínima de um subconjunto de vertices e
-//escreve esta no arquivo 'arquivo' com formato .dot
-//Recebe como parâmetro o número de vértices contidos no subconjunto (num_vert), o subconjunto de vértices
+// Encontra, através do algoritmo de Prim, a arvore geradora mínima de um subconjunto de vertices e
+// escreve esta no arquivo 'arquivo' com formato .dot
+// Recebe como parâmetro o número de vértices contidos no subconjunto (num_vert), o subconjunto de vértices
 //(subConj_vertices[]) e o nome do arquivo em que se deseja salvar a arvore gerada
 void Grafo::arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquivo)
 {
@@ -538,18 +540,20 @@ void Grafo::arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquiv
 
     arvMinimaPrim->escreveArquivoDot(*arvMinimaPrim, arquivo, "Prim");
 
-    cout << endl << "Arvore Geradora Minima - Prim:";
+    cout << endl
+         << "Arvore Geradora Minima - Prim:";
 
     arvMinimaPrim->printGrafo();
 
-    cout << endl << "Obs: A Arvore Geradora Minima obtida atraves do algoritmo de Prim foi salva em " << arquivo << endl;
+    cout << endl
+         << "Obs: A Arvore Geradora Minima obtida atraves do algoritmo de Prim foi salva em " << arquivo << endl;
 }
 
-//Função utilizada pela função arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquivo) para calcular
-//dados dois vértices o peso, se existir, da aresta entre eles. Caso não exista, o peso entre elas é tido como infinito
+// Função utilizada pela função arvoreMinimaPrim(int num_vert, int subConj_vertices[], string arquivo) para calcular
+// dados dois vértices o peso, se existir, da aresta entre eles. Caso não exista, o peso entre elas é tido como infinito
 //(INT_MAX)
-//Recebe como parâmetro um vetor com todas as arestas de interesse (arestas[]), o id dos vértices (id1 e id2), para os 
-//quais se quer verificar o peso da aresta e o tamanho da lista de arestas(tamListaArestas)
+// Recebe como parâmetro um vetor com todas as arestas de interesse (arestas[]), o id dos vértices (id1 e id2), para os
+// quais se quer verificar o peso da aresta e o tamanho da lista de arestas(tamListaArestas)
 int Grafo::getPeso(Aresta arestas[], int id1, int id2, int tamListaArestas)
 {
     if (id1 == id2)
@@ -568,117 +572,157 @@ int Grafo::getPeso(Aresta arestas[], int id1, int id2, int tamListaArestas)
     return INT_MAX;
 }
 
-//Calcula o coeficiente de agrupamento local de um vértice.
-//Recebe como parâmetro o id do vértice(id_vert)
-float Grafo::coefAgrupLocal(int id_vert){
+// Calcula o coeficiente de agrupamento local de um vértice.
+// Recebe como parâmetro o id do vértice(id_vert)
+float Grafo::coefAgrupLocal(int id_vert)
+{
     No *v;
-    try {
+    try
+    {
         v = mapa.at(id_vert);
-    } catch (const out_of_range &oor){
+    }
+    catch (const out_of_range &oor)
+    {
         cout << "Erro: Nao existe vertice de id " << id_vert << " no grafo" << endl;
         return -1.f;
     }
-    int numArestasTot;
-    int num_vAdj;
-    if (direcionado) {
+    int numArestasTot = 0;
+    int num_vAdj = 0;
+    if (direcionado)
+    {
         num_vAdj = v->getGrauEntrada() + v->getGrauSaida();
         numArestasTot = (num_vAdj - 1) * num_vAdj;
     }
-    else {
+    else
+    {
         num_vAdj = v->getGrau();
         numArestasTot = (num_vAdj - 1) * num_vAdj / 2;
     }
 
     Aresta *a = v->primeiraAresta;
-    int id_vAdj [num_vAdj];
+    int id_vAdj[num_vAdj];
 
     int i = 0;
 
-    while (a != NULL) {
+    while (a != NULL)
+    {
         id_vAdj[i] = a->id;
         a = a->proxAresta;
         i++;
     }
 
+    No *aux = primeiroNo;
+    while (aux != NULL)
+    {
+        Aresta *a = aux->primeiraAresta;
+        while (a != NULL)
+        {
+            if (a->id == id_vert)
+            {
+                id_vAdj[i] = aux->id;
+                i++;
+            }
+            a = a->proxAresta;
+        }
+        aux = aux->proxNo;
+    }
+
     int numArestasExist = 0;
 
-    for (int i = 0; i < num_vAdj; i++){
+    for (int i = 0; i < num_vAdj; i++)
+    {
         No *adj = mapa.at(id_vAdj[i]);
         a = adj->primeiraAresta;
-        while (a != NULL) {
-            for (int j = 0; j < num_vAdj; j++){
-                if (i != j && a->id != id_vert && a->id == id_vAdj[j]){
-                    numArestasExist ++;
+        while (a != NULL)
+        {
+            for (int j = 0; j < num_vAdj; j++)
+            {
+                if (i != j && a->id != id_vert && a->id == id_vAdj[j])
+                {
+                    numArestasExist++;
                 }
             }
             a = a->proxAresta;
         }
-    }   
+    }
 
-    if (!direcionado) {
+    if (!direcionado)
+    {
         numArestasExist /= 2;
     }
 
-    if (numArestasTot == 0){
+    if (numArestasTot == 0)
+    {
         /*
-        cout << "Erro: o vertice de id " << id_vert << " possui um unico vertice adjacente. Portanto, nao foi possivel " << 
+        cout << "Erro: o vertice de id " << id_vert << " possui um unico vertice adjacente. Portanto, nao foi possivel " <<
         "calcular o coeficiente de agrupamento deste (divisao por zero)" << endl;
         */
-       return 0.f;
+        return 0.f;
     }
-    return float(numArestasExist)/numArestasTot;
+    return float(numArestasExist) / numArestasTot;
 }
 
-//Calcula o coeficiente de agrupamento médio do grafo
-float Grafo::coefAgrupMedio(){
+// Calcula o coeficiente de agrupamento médio do grafo
+float Grafo::coefAgrupMedio()
+{
     float somaCoef = 0;
     No *v = primeiroNo;
     bool erro = false;
-    while (v != NULL){
+    while (v != NULL)
+    {
         float c = coefAgrupLocal(v->id);
-        if (c == -1){
+        if (c == -1)
+        {
             return -1.f;
         }
         somaCoef += c;
         v = v->proxNo;
     }
-    return somaCoef/ordem;
+    return somaCoef / ordem;
 }
 
-No* Grafo::procurarNo(int id){
-    for(auto i = nosGrafo.begin(); i != nosGrafo.end();i++){
-        No* aux = *i;
-        if(aux->getId() == id)
-        return aux;
+No *Grafo::procurarNo(int id)
+{
+    for (auto i = nosGrafo.begin(); i != nosGrafo.end(); i++)
+    {
+        No *aux = *i;
+        if (aux->getId() == id)
+            return aux;
     }
     return nullptr;
 }
 
-Aresta* Grafo::existeAresta(int id ,int id_alvo){ // FUNCAO PARA ACHAR UMA ARESTA DADO DOIS VERTICES
+Aresta *Grafo::existeAresta(int id, int id_alvo)
+{ // FUNCAO PARA ACHAR UMA ARESTA DADO DOIS VERTICES
     for (auto i = this->arestasGrafo.begin(); i != this->arestasGrafo.end(); i++)
     {
-        Aresta* verificador = *i; 
-        if(verificador->getIdOrigem() == id && verificador->getId() == id_alvo){
+        Aresta *verificador = *i;
+        if (verificador->getIdOrigem() == id && verificador->getId() == id_alvo)
+        {
             return verificador;
         }
     }
     return NULL;
 }
 
-list<int> Grafo::caminhoMinimoDijkstra(int ID1, int ID2){
-    Dijkstra* aux = new Dijkstra(this);
-    cout<< "entrei no grafo"<<endl;
+list<int> Grafo::caminhoMinimoDijkstra(int ID1, int ID2)
+{
+    Dijkstra *aux = new Dijkstra(this);
+    // cout<< "entrei no grafo"<<endl;
     list<int> caminhoD = aux->caminhoMinimo(this, ID1, ID2);
-    if(caminhoD.size()>0){
+    if (caminhoD.size() > 0)
+    {
         cout << "Caminho minimo: ";
-        for(auto i = caminhoD.begin(); i != caminhoD.end(); i++){
+        for (auto i = caminhoD.begin(); i != caminhoD.end(); i++)
+        {
             cout << *i << " ";
         }
         cout << endl;
     }
     return caminhoD;
 }
-void Grafo::caminhoMinimoFloyd(int ID1, int ID2){
+void Grafo::caminhoMinimoFloyd(int ID1, int ID2)
+{
     Floyd aux;
     aux.caminhoMinimo(this, ID1, ID2);
 }
@@ -727,12 +771,13 @@ void Grafo::prof(int id, int visitado[], ofstream *saida)
                 *saida << " [label=" << a->getPeso() << "]";
             }
             *saida << endl;
-            if (direcionado && existeAresta(a->getId(), id)){
+            if (direcionado && existeAresta(a->getId(), id))
+            {
                 cout << "(" << id << "," << a->getId() << ") Aresta de Retorno " << endl;
                 if (!direcionado)
                     *saida << a->getId() << " -- " << id << "[style=dotted]";
                 else
-                    *saida << a->getId() << " -> " << id << "[style=dotted]";                    
+                    *saida << a->getId() << " -> " << id << "[style=dotted]";
                 if (peso_aresta)
                 {
                     *saida << " [label=" << a->getPeso() << "]";
@@ -756,7 +801,8 @@ void Grafo::prof(int id, int visitado[], ofstream *saida)
                 }
                 *saida << endl;
 
-                if (direcionado && existeAresta(a->getId(), id)){
+                if (direcionado && existeAresta(a->getId(), id))
+                {
                     cout << "(" << id << "," << a->getId() << ") Aresta de Retorno " << endl;
                     if (!direcionado)
                         *saida << a->getId() << " -- " << id << "[style=dotted]";
@@ -797,14 +843,17 @@ void Grafo::buscaProf(int id, string arquivo)
         int i = 0;
         prof(id, visitado, &saida);
         for (No *v = primeiroNo; v != NULL; v = v->proxNo)
-        {   
-            if (visitado[i] == 0) {
+        {
+            if (visitado[i] == 0)
+            {
                 prof(v->getId(), visitado, &saida);
             }
             i++;
         }
         saida << "}" << endl;
         saida.close();
+        cout << endl
+             << "Obs: A arvore obtida a partir da busca em profundidade foi salva em " << arquivo << endl;
     }
     else
     {
@@ -840,29 +889,29 @@ void Grafo::floyd(int id1, int id2)
 
     int A[ordem][ordem];
 
-    for(int i = 0; i < ordem; i++)
+    for (int i = 0; i < ordem; i++)
     {
-        for(int j = 0; j < ordem; j++)
+        for (int j = 0; j < ordem; j++)
         {
             A[i][j] = INT_MAX;
         }
     }
 
-    Aresta* a;
+    Aresta *a;
 
-    for(No *i = primeiroNo; i != NULL; i = i->proxNo)
+    for (No *i = primeiroNo; i != NULL; i = i->proxNo)
     {
         a = i->primeiraAresta;
-        
-        while(a != NULL)
+
+        while (a != NULL)
         {
             for (No *j = primeiroNo; j != NULL; j = j->proxNo)
             {
-                if(i->id_insercao == j->id_insercao)
+                if (i->id_insercao == j->id_insercao)
                 {
                     A[i->id_insercao][j->id_insercao] = 0;
                 }
-                else if(a->id == j->id)
+                else if (a->id == j->id)
                 {
                     A[i->id_insercao][j->id_insercao] = a->getPeso();
                 }
@@ -871,19 +920,19 @@ void Grafo::floyd(int id1, int id2)
         }
     }
 
-    for(No *i = primeiroNo; i != NULL; i = i->proxNo)
+    for (No *i = primeiroNo; i != NULL; i = i->proxNo)
     {
-        for(No *j = primeiroNo; j != NULL; j = j->proxNo)
+        for (No *j = primeiroNo; j != NULL; j = j->proxNo)
         {
-            for(No *k = primeiroNo; k != NULL; k = k->proxNo)
+            for (No *k = primeiroNo; k != NULL; k = k->proxNo)
             {
-                if(A[j->id_insercao][i->id_insercao] != INT_MAX && A[i->id_insercao][k->id_insercao] != INT_MAX && A[j->id_insercao][i->id_insercao] + A[i->id_insercao][k->id_insercao] < A[j->id_insercao][k->id_insercao])
+                if (A[j->id_insercao][i->id_insercao] != INT_MAX && A[i->id_insercao][k->id_insercao] != INT_MAX && A[j->id_insercao][i->id_insercao] + A[i->id_insercao][k->id_insercao] < A[j->id_insercao][k->id_insercao])
                     A[j->id_insercao][k->id_insercao] = A[j->id_insercao][i->id_insercao] + A[i->id_insercao][k->id_insercao];
             }
         }
     }
 
-    if(A[v1->id_insercao][v2->id_insercao] == INT_MAX)
+    if (A[v1->id_insercao][v2->id_insercao] == INT_MAX)
     {
         cout << "Nao existe caminho de " << id1 << " a " << id2 << endl;
         return;

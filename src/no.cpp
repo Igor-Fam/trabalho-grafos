@@ -29,13 +29,13 @@ bool No::noExiste(int id)
 
 bool No::addAresta(int id1, int id2, int arestas_inseridas, float peso)
 {
-    
+
     // cout << id1 << " " << id2 << " " << arestas_inseridas << endl;
     if (this->id == id1)
     {
         if (primeiraAresta == nullptr)
         {
-            Aresta *newAresta = new Aresta(this->id,id2, peso);
+            Aresta *newAresta = new Aresta(this->id, id2, peso);
             primeiraAresta = newAresta;
             primeiraAresta->setId_insercao(arestas_inseridas);
             return true;
@@ -169,26 +169,25 @@ void No::adicionaAdjacencia(int id_alvo)
     this->ListAdj.push_back(id_alvo);
 }
 
-void No::PreencheDist(unsigned int dist[], int tam, Grafo* g)
+void No::PreencheDist(unsigned int dist[], int tam, Grafo *g)
 {
-    list<No*> abertos;
+    list<No *> abertos;
     for (auto k = g->nosGrafo.begin(); k != g->nosGrafo.end(); k++)
     {
-        No* auxiliar = *k;
+        No *auxiliar = *k;
         abertos.push_back(auxiliar);
     }
     abertos.remove(this);
     for (auto i = this->ListAdj.begin(); i != this->ListAdj.end(); i++)
     {
-        Aresta* ArestaAuxiliar = g->existeAresta(this->getId(), *i);
-        if(ArestaAuxiliar != nullptr)
+        Aresta *ArestaAuxiliar = g->existeAresta(this->getId(), *i);
+        if (ArestaAuxiliar != nullptr)
         {
             float pesoAresta = ArestaAuxiliar->getPeso();
-            if(pesoAresta < dist[*i])
+            if (pesoAresta < dist[*i])
             {
                 dist[*i] = pesoAresta;
             }
         }
     }
-    
 }

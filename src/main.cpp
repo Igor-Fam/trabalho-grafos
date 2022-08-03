@@ -108,7 +108,7 @@ int main(int argc, char **argv)
         }
     }
 
-    cout << boolalpha << "dir: " << dir << endl;
+    //cout << boolalpha << "dir: " << dir << endl;
     Grafo *g = new Grafo(dir);
     g->setPesoAresta(peso_aresta);
 
@@ -156,7 +156,7 @@ int main(int argc, char **argv)
         cout << "Erro ao abrir o arquivo de entrada" << endl;
         exit(1);
     }
-    cout << "tentando imprimir menu" << endl;
+    //cout << "tentando imprimir menu" << endl;
     imprimeMenu();
     int opcao;
     do
@@ -208,8 +208,8 @@ int main(int argc, char **argv)
                         No *aux = g->procurarNo(no2);
                         if (aux->getGrauEntrada() != 0)
                         {
-                            //cout << "criando caminho minimo 5 main.cpp " << endl;
-                            list <int> apenasImpressao = g->caminhoMinimoDijkstra(no1, no2);
+                            // cout << "criando caminho minimo 5 main.cpp " << endl;
+                            list<int> apenasImpressao = g->caminhoMinimoDijkstra(no1, no2);
                         }
                         else
                             cout << "O no não tem grau de entrada" << endl;

@@ -9,11 +9,10 @@ using namespace std;
 Aresta::Aresta(int id1, int id2, float peso)
 {
     this->id_origem = id1;
-    this->id= id2;
+    this->id = id2;
     this->peso = peso;
     proxAresta = nullptr;
 }
-
 
 Aresta::Aresta(int id, float peso)
 {
@@ -24,8 +23,7 @@ Aresta::Aresta(int id, float peso)
 
 void Aresta::addAresta(int id, int arestas_inseridas, float peso)
 {
-    
-    
+
     if (proxAresta == nullptr)
     {
         Aresta *newAresta = new Aresta(id, peso);
