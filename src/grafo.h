@@ -25,10 +25,14 @@ public:
     void addAresta(int id1, int id2, float peso = 0);
     No* auxAddNo(int id, float peso = 0);
     void addNo(int id, float peso = 0);
+    No* getNo(int i){ return mapa[i]; }
     void printGrafo();
     void printGrau(int id);
     void fechoTransitivoDireto(int id);
     void fechoTransitivoIndireto(int id);
+    void QuickSort(Aresta arestas[], int p, int q);
+    int particionamento(Aresta arestas[], int p, int q);
+    void troca(Aresta *a, Aresta *b);
 };
 
 #endif

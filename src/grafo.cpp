@@ -43,8 +43,8 @@ void Grafo::addAresta(int id1, int id2, float peso){
         }
     } else {
         auxAddAresta(id1, id2, peso);
-        mapa.at(id1)->addGrauEntrada();
-        mapa.at(id2)->addGrauSaida();
+        mapa.at(id1)->addGrauSaida();
+        mapa.at(id2)->addGrauEntrada();
     }
         
 }
@@ -106,3 +106,47 @@ void Grafo::fechoTransitivoIndireto(int id){
 
     delete fti, nosVisitados;
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Ordena um vetor de aresta com base no peso dessas
+void Grafo::QuickSort(Aresta arestas[], int p, int q)
+{
+    if (p < q)
+    {
+        int j = particionamento(arestas, p, q);
+        QuickSort(arestas, p, j - 1);
+        QuickSort(arestas, j + 1, q);
+    }
+}
+
+int Grafo::particionamento(Aresta arestas[], int p, int q)
+{
+    int i = p - 1, j = q;
+    int v = arestas[q].peso;
+
+    while (1)
+    {
+        while (arestas[++i].peso < v)
+            ;
+        while (v < arestas[--j].peso)
+        {
+            if (j == p)
+                break;
+        }
+        if (i >= j)
+            break;
+        troca(&arestas[i], &arestas[j]);
+    }
+
+    troca(&arestas[i], &arestas[q]);
+
+    return i;
+}
+
+void Grafo::troca(Aresta *a, Aresta *b)
+{
+    Aresta aux = *a;
+    *a = *b;
+    *b = aux;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
