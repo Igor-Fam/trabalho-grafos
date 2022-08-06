@@ -6,6 +6,6 @@ using namespace std;
 
 Guloso::Guloso(int numeroClusters, float limiteInferior, float limiteSuperior){
     clusters = new Cluster[numeroClusters];
-    Cluster::setLimiteInferior(limiteInferior);
-    Cluster::setLimiteSuperior(limiteSuperior);
+    //Cluster::setLimiteInferior(limiteInferior);
+    //Cluster::setLimiteSuperior(limiteSuperior);
 }

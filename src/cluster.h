@@ -16,8 +16,8 @@ private:
     int* vertices;
     float pesoVertices;
     float pesoArestas;
-    static int limiteInferior;
-    static int limiteSuperior;
+    int limiteInferior;
+    int limiteSuperior;
 public:
     Cluster(){}
     Cluster(int noInicial_, Grafo* g);
@@ -28,11 +28,11 @@ public:
     float getPesoArestas() const { return pesoArestas; }
     void setPesoArestas(float pesoArestas_) { pesoArestas = pesoArestas_; }
 
-    static float getLimiteInferior() { return Cluster::limiteInferior; }
-    static void setLimiteInferior(float limiteInferior) { Cluster::limiteInferior = limiteInferior; }
+    float getLimiteInferior() { return limiteInferior; }
+    void setLimiteInferior(float limiteInferior) { this->limiteInferior = limiteInferior; }
 
-    static float getLimiteSuperior() { return Cluster::limiteSuperior; }
-    static void setLimiteSuperior(float limiteSuperior) { Cluster::limiteSuperior = limiteSuperior; }
+    float getLimiteSuperior() { return limiteSuperior; }
+    void setLimiteSuperior(float limiteSuperior) { this->limiteSuperior = limiteSuperior; }
     
 };
 

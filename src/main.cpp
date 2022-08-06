@@ -1,157 +1,104 @@
 #include <iostream>
 #include <fstream>
-#include <cstring>
-#include <unordered_map>
-// #include "aresta.h"
-// #include "no.h"
 #include "grafo.h"
+#include <cstring>
 
 using namespace std;
 
-void separaDadoArqEnt(string &str, int &parametro)
-{
-    int pos = str.find(' ');
-    parametro = stoi(str.substr(0, pos));
-    str.erase(0, pos + 1);
-    return;
+void leHandover(ifstream &arq_ent, Grafo *g){
+    long long num_nos;
+    long long num_clusters;
+    double lim_inf = 0;
+    double lim_sup;
+
+    float pesoNo;
+    float pesoAresta;
+
+    arq_ent >> num_nos;
+    arq_ent >> num_clusters;
+    arq_ent >> lim_sup;
+
+    for (long long i = 0; i < num_nos; i++)
+    {
+        arq_ent >> pesoNo;
+        g->addNo(i, pesoNo);
+    }
+
+    int numArestas = 0;
+    for (long long i = 0; i < num_nos; i++)
+    {
+        for (long long j = 0; j < num_nos; j++)
+        {
+            arq_ent >> pesoAresta;
+            if (pesoAresta != 0){
+                numArestas ++;
+                g->addAresta(i, j, pesoAresta);
+            }
+        }
+    }
 }
 
-bool comparaStrings(const char *str1, const char *str2)
-{
-    if (strcmp(str1, str2) == 0)
-        return true;
-    return false;
+void le(ifstream &arq_ent, Grafo *g){
+    long long num_nos;
+    long long num_clusters;
+    int lim_inf [num_clusters];
+    int lim_sup [num_clusters];
+
+    int id_origem;
+    int id_dest;
+    float pesoAresta;
+    float pesoNo;
+
+    string lixo;
+
+    arq_ent >> num_nos;
+    arq_ent >> num_clusters;
+    arq_ent >> lixo;
+
+    for (long long i = 0; i < num_clusters; i++)
+    {        
+        arq_ent >> lim_inf [i];
+        arq_ent >> lim_sup [i];
+    }
+
+    arq_ent >> lixo;
+
+    for (long long i = 0; i < num_nos; i++){
+        arq_ent >> pesoNo;
+        g->addNo(i, pesoNo);
+    }
+
+    int numArestas = 0;
+    while(!arq_ent.eof()){
+        arq_ent >> id_origem;
+        arq_ent >> id_dest;
+        arq_ent >> pesoAresta;
+        numArestas ++;
+        g->addAresta(id_origem, id_dest, pesoAresta);
+    }
+}
+
+void leArquivoEntrada(ifstream &arq_ent, string tipo_instancia, Grafo *g){
+
+    if (strcasecmp(tipo_instancia.c_str(), "Handover") == 0){
+        leHandover(arq_ent, g);
+    }
+    else{
+        le(arq_ent, g);
+    }
 }
 
 int main(int argc, char **argv)
 {
+    Grafo *g = new Grafo(false);
 
-    bool dir, peso_aresta, peso_vertice;
-    bool invalido;
-
-    for (int i = 3; i <= 5; i++)
-    {
-        if (argv[i] != NULL)
-        {
-            bool parametro;
-            if (comparaStrings(argv[i], "0"))
-                parametro = false;
-            else if (comparaStrings(argv[i], "1"))
-                parametro = true;
-            else
-                invalido = true;
-            if (!invalido && i == 3)
-                dir = parametro;
-            else if (!invalido && i == 4)
-                peso_aresta = parametro;
-
-            else if (!invalido && i == 5)
-                if (peso_aresta && parametro)
-                {
-                    cout << "Não é possível atribuir peso às arestas e aos vértices simultaneamente" << endl;
-                    exit(1);
-                }
-                else
-                    peso_vertice = parametro;
-        }
-        if (argv[i] == NULL || invalido)
-        {
-            cout << "Argumento passado pela linha de comando inválido ou faltante" << endl;
-            exit(1);
-        }
-    }
-
-    Grafo *g = new Grafo(dir);
-
-    ifstream arq_ent;
+    ifstream arq_ent, arq_saida;
     arq_ent.open(argv[1], ios::in);
-    if (arq_ent.is_open())
-    {
-        string str;
-
-        getline(arq_ent, str);
-
-        int num_vert = stoi(str);
-
-        int cont = 0;
-
-        while (!arq_ent.eof())
-        {
-            getline(arq_ent, str);
-
-            int id1, id2, p_a = 0 /*, p_v = 0*/;
-
-            separaDadoArqEnt(str, id1);
-            separaDadoArqEnt(str, id2);
-            if (peso_aresta)
-            {
-                separaDadoArqEnt(str, p_a);
-            }
-
-            /*
-            else if (peso_vertice)
-            {
-                separaDadoArqEnt(str, p_v);
-            }
-            */
-
-            g->addNo(id1);
-            g->addNo(id2);
-            g->addAresta(id1, id2, p_a);
-        }
-
-        //g->printGrafo();
-
+    if (arq_ent.is_open()){
+        leArquivoEntrada(arq_ent, argv[3], g);
         arq_ent.close();
     }
-    else
-    {
-        cout << "Erro ao abrir o arquivo de entrada" << endl;
-        exit(1);
+    else{
+        cout << "Erro ao abrir arquivo de entrada" << endl;
     }
-
-    ofstream arq_saida;
-    arq_saida.open(argv[2], ios::out);
-    if (arq_saida.is_open())
-    {
-        arq_saida.close();
-    }
-    else
-    {
-        cout << "Erro ao abrir o arquivo de saída" << endl;
-        exit(1);
-    }
-    g->printGrafo();
-    g->fechoTransitivoIndireto(1);
-
-    //Grafo* g = new Grafo();
-    // while(true){
-    //     cout << "Digite n para adicionar um no, a para adicionar uma aresta e g para verificar grau de um no" << endl;
-    //     char option;
-    //     cin >> option;
-    //     if(option == 'n'){
-    //         cout << "Digite o id do no" << endl;
-    //         int id;
-    //         cin >> id;
-    //         g->addNo(id);
-    //     }
-    //     if(option == 'a'){
-    //         cout << "Digite o id do primeiro no" << endl;
-    //         int id1;
-    //         cin >> id1;
-    //         cout << "Digite o id do segundo no" << endl;
-    //         int id2;
-    //         cin >> id2;
-    //         g->addAresta(id1, id2, false);
-    //     }
-    //     if(option == 'g'){
-    //         cout << "Digite o id do no" << endl;
-    //         int id;
-    //         cin >> id;
-    //         g->printGrau(id);
-    //     }
-    //     g->printGrafo();
-    // }
-
-    return 0;
 }
