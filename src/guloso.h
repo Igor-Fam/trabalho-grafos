@@ -12,11 +12,11 @@ class Guloso
 private:
     Grafo* g;
     Aresta* candidatos;
-    Cluster* clusters;
+    Cluster** clusters;
     float valorSolucao;
     float tempo;
 public:
-    Guloso(int numeroClusters, float limiteInferior, float limiteSuperior);
+    Guloso(int numeroClusters, float limiteInferior, float limiteSuperior, int numeroVertices, Grafo *g);
 };
 
 #endif

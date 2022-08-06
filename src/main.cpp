@@ -1,11 +1,13 @@
 #include <iostream>
 #include <fstream>
 #include "grafo.h"
+#include "guloso.h"
 #include <cstring>
+#include <strings.h>
 
 using namespace std;
 
-void leHandover(ifstream &arq_ent, Grafo *g){
+void leHandover(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
     long long num_nos;
     long long num_clusters;
     double lim_inf = 0;
@@ -36,13 +38,15 @@ void leHandover(ifstream &arq_ent, Grafo *g){
             }
         }
     }
+    algoritmo = new Guloso(num_clusters, lim_inf, lim_sup, num_nos, g);
+
 }
 
-void le(ifstream &arq_ent, Grafo *g){
+void le(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
     long long num_nos;
     long long num_clusters;
-    int lim_inf [num_clusters];
-    int lim_sup [num_clusters];
+    int* lim_inf = new int[num_clusters];
+    int* lim_sup = new int[num_clusters];
 
     int id_origem;
     int id_dest;
@@ -76,26 +80,27 @@ void le(ifstream &arq_ent, Grafo *g){
         numArestas ++;
         g->addAresta(id_origem, id_dest, pesoAresta);
     }
+    delete [] lim_inf, lim_sup;
 }
 
-void leArquivoEntrada(ifstream &arq_ent, string tipo_instancia, Grafo *g){
-
-    if (strcasecmp(tipo_instancia.c_str(), "Handover") == 0){
-        leHandover(arq_ent, g);
+void leArquivoEntrada(ifstream &arq_ent, string tipo_instancia, Grafo *g, Guloso *algoritmo){
+    string s = "Handover";
+    if (strcasecmp(tipo_instancia.c_str(), s.c_str()) == 0){
+        leHandover(arq_ent, g, algoritmo);
     }
     else{
-        le(arq_ent, g);
+        le(arq_ent, g, algoritmo);
     }
 }
 
 int main(int argc, char **argv)
 {
     Grafo *g = new Grafo(false);
-
+    Guloso *algoritmo;
     ifstream arq_ent, arq_saida;
     arq_ent.open(argv[1], ios::in);
     if (arq_ent.is_open()){
-        leArquivoEntrada(arq_ent, argv[3], g);
+        leArquivoEntrada(arq_ent, argv[3], g, algoritmo);
         arq_ent.close();
     }
     else{

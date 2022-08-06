@@ -16,11 +16,11 @@ private:
     int* vertices;
     float pesoVertices;
     float pesoArestas;
-    int limiteInferior;
-    int limiteSuperior;
+    float limiteInferior;
+    float limiteSuperior;
 public:
     Cluster(){}
-    Cluster(int noInicial_, Grafo* g);
+    Cluster(int noInicial_, Grafo* g, float limiteInferior, float limiteSuperior);
 
     float getPesoVertices() const { return pesoVertices; }
     void setPesoVertices(float pesoVertices_) { pesoVertices = pesoVertices_; }
