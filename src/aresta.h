@@ -12,6 +12,7 @@ class Grafo;
 class Aresta{
     private:
         int id;
+        int id_origem;
         Aresta* proxAresta;
         float peso;
         friend class No;
@@ -19,6 +20,7 @@ class Aresta{
         
     public:
         Aresta(int id, float peso = 0);
+        Aresta(int id_origem, int id, float peso = 0);
         Aresta(){};
         ~Aresta(){};
         void addAresta(int id, float peso = 0);

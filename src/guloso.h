@@ -16,8 +16,8 @@ private:
     float valorSolucao;
     float tempo;
 public:
-    Guloso(int numeroClusters, float limiteInferior, float limiteSuperior, int numeroVertices, Grafo *g);
-    Guloso(int numeroClusters, float limiteInferior [], float limiteSuperior [], int numeroVertices, Grafo *g);
+    Guloso(int numeroClusters, float limiteInferior, float limiteSuperior, int numeroVertices, Grafo *g, int numArestas);
+    Guloso(int numeroClusters, float limiteInferior [], float limiteSuperior [], int numeroVertices, Grafo *g, int numArestas);
 };
 
 #endif

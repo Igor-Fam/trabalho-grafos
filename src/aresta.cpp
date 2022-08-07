@@ -12,6 +12,13 @@ Aresta::Aresta(int id, float peso){
     proxAresta = nullptr;
 }
 
+Aresta::Aresta(int id_origem, int id, float peso){
+    this->id_origem = id_origem;
+    this->id = id;
+    this->peso = peso;
+    proxAresta = nullptr;
+}
+
 void Aresta::addAresta(int id, float peso){
     if(proxAresta == nullptr){
         Aresta* newAresta = new Aresta(id, peso);

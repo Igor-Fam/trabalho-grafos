@@ -38,7 +38,7 @@ void leHandover(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
             }
         }
     }
-    algoritmo = new Guloso(num_clusters, lim_inf, lim_sup, num_nos, g);
+    algoritmo = new Guloso(num_clusters, lim_inf, lim_sup, num_nos, g, numArestas/2);
 
 }
 
@@ -82,7 +82,7 @@ void le(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
         g->addAresta(id_origem, id_dest, pesoAresta);
     }
 
-    algoritmo = new Guloso(num_clusters, lim_inf, lim_sup, num_nos, g);
+    algoritmo = new Guloso(num_clusters, lim_inf, lim_sup, num_nos, g, numArestas);
 
     delete [] lim_inf, lim_sup;
 }

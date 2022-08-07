@@ -122,13 +122,12 @@ void Grafo::QuickSort(Aresta arestas[], int p, int q)
 int Grafo::particionamento(Aresta arestas[], int p, int q)
 {
     int i = p - 1, j = q;
-    int v = arestas[q].peso;
+    float v = arestas[q].peso;
 
     while (1)
     {
-        while (arestas[++i].peso < v)
-            ;
-        while (v < arestas[--j].peso)
+        while (arestas[++i].peso > v);
+        while (v > arestas[--j].peso)
         {
             if (j == p)
                 break;
@@ -150,3 +149,39 @@ void Grafo::troca(Aresta *a, Aresta *b)
     *b = aux;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Aresta* Grafo::getArestas(int numArestas){
+    Aresta *arestas = new Aresta[numArestas];
+    int cont = 0;
+    cout << numArestas << endl;
+    for (No *v1 = primeiroNo; v1 != NULL; v1 = v1->proxNo)
+    {
+        Aresta *a = v1->primeiraAresta;
+        while (a != NULL)
+        {
+            a->id_origem = v1->id;
+            if (a->id_origem < a->id){
+                //arestas[cont] = new Aresta(a->id_origem, a->id, a->peso);
+                arestas[cont] = *a;
+                cont++;
+            }
+            a = a->proxAresta;
+        }
+    }
+    
+    /*
+    for (int b = 0; b < numArestas; b++){
+        cout << (arestas[b]).id_origem << " " << arestas[b].id << " " << arestas[b].peso << endl;
+    }
+    */
+    
+    QuickSort(arestas, 0, cont - 1);
+
+    /*
+    for (int b = 0; b < numArestas; b++){
+        cout << (arestas[b]).id_origem << " " << arestas[b].id << " " << arestas[b].peso << endl;
+    }
+    */
+
+    return arestas;
+}

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Guloso::Guloso(int numeroClusters, float limiteInferior, float limiteSuperior, int numeroVertices, Grafo *g)
+Guloso::Guloso(int numeroClusters, float limiteInferior, float limiteSuperior, int numeroVertices, Grafo *g, int numArestas)
 {
     clusters = new Cluster *[numeroClusters];
     int *idsInvalidos = new int[numeroVertices];
@@ -46,9 +46,11 @@ Guloso::Guloso(int numeroClusters, float limiteInferior, float limiteSuperior, i
         cout << "Cluster: " << i << " IdInicial: " << idInicial << endl;
         clusters[i] = new Cluster(idInicial, g, limiteInferior, limiteSuperior);
     }
+
+    g->getArestas(numArestas);
 }
 
-Guloso::Guloso(int numeroClusters, float limiteInferior[], float limiteSuperior[], int numeroVertices, Grafo *g)
+Guloso::Guloso(int numeroClusters, float limiteInferior[], float limiteSuperior[], int numeroVertices, Grafo *g, int numArestas)
 {
     clusters = new Cluster *[numeroClusters];
     int *idsInvalidos = new int[numeroVertices];
@@ -90,4 +92,6 @@ Guloso::Guloso(int numeroClusters, float limiteInferior[], float limiteSuperior[
         cout << "Cluster: " << i << " IdInicial: " << idInicial << endl;
         clusters[i] = new Cluster(idInicial, g, limiteInferior[i], limiteSuperior[i]);
     }
+
+    g->getArestas(numArestas);
 }

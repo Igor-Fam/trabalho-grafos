@@ -3,6 +3,7 @@
 
 #include "no.h"
 #include <unordered_map>
+#include <list>
 
 using namespace std;
 
@@ -19,7 +20,7 @@ private:
     friend class Aresta;
 public:
     Grafo(){ primeiroNo = nullptr; direcionado = false;};
-    Grafo(bool direcionado){ primeiroNo = nullptr; this->direcionado = direcionado; };
+    Grafo(bool direcionado){ primeiroNo = nullptr; this->direcionado = direcionado;};
     ~Grafo(){};
     bool auxAddAresta(int id1, int id2, float peso = 0);
     void addAresta(int id1, int id2, float peso = 0);
@@ -33,6 +34,7 @@ public:
     void QuickSort(Aresta arestas[], int p, int q);
     int particionamento(Aresta arestas[], int p, int q);
     void troca(Aresta *a, Aresta *b);
+    Aresta* getArestas(int numArestas);
 };
 
 #endif
