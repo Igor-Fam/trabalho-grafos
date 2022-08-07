@@ -128,8 +128,9 @@ void No:: getAdjacencias(int* idsInvalidos, int* idInvalidoCont){
     Aresta* a = primeiraAresta;
     while(a != nullptr){
         if(idsInvalidos[a->id] == 0){
-            *idInvalidoCont++;
+            (*idInvalidoCont)++;
         }
         idsInvalidos[a->id] = 2;
+        a = a->proxAresta;
     }
 }

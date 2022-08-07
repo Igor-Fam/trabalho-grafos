@@ -45,8 +45,6 @@ void leHandover(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
 void le(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
     long long num_nos;
     long long num_clusters;
-    int* lim_inf = new int[num_clusters];
-    int* lim_sup = new int[num_clusters];
 
     int id_origem;
     int id_dest;
@@ -58,6 +56,9 @@ void le(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
     arq_ent >> num_nos;
     arq_ent >> num_clusters;
     arq_ent >> lixo;
+
+    float* lim_inf = new float[num_clusters];
+    float* lim_sup = new float[num_clusters];
 
     for (long long i = 0; i < num_clusters; i++)
     {        
@@ -80,6 +81,9 @@ void le(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
         numArestas ++;
         g->addAresta(id_origem, id_dest, pesoAresta);
     }
+
+    algoritmo = new Guloso(num_clusters, lim_inf, lim_sup, num_nos, g);
+
     delete [] lim_inf, lim_sup;
 }
 

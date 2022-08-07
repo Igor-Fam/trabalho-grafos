@@ -17,6 +17,7 @@ private:
     float tempo;
 public:
     Guloso(int numeroClusters, float limiteInferior, float limiteSuperior, int numeroVertices, Grafo *g);
+    Guloso(int numeroClusters, float limiteInferior [], float limiteSuperior [], int numeroVertices, Grafo *g);
 };
 
 #endif
