@@ -4,6 +4,8 @@
 #include "no.h"
 #include <unordered_map>
 #include <list>
+#include <ostream>
+#include <iostream>
 
 using namespace std;
 
@@ -35,6 +37,14 @@ public:
     int particionamento(Aresta arestas[], int p, int q);
     void troca(Aresta *a, Aresta *b);
     Aresta* getArestas(int numArestas);
+    void imprimeMap(){
+        auto i = mapa.begin();
+        while(i != mapa.end())
+        {
+            cout << i->first << endl;
+            ++i;
+        }
+    }
 };
 
 #endif

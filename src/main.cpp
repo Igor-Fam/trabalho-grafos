@@ -13,7 +13,7 @@ void leHandover(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
     double lim_inf = 0;
     double lim_sup;
 
-    float pesoNo;
+    double pesoNo;
     float pesoAresta;
 
     arq_ent >> num_nos;
@@ -39,7 +39,6 @@ void leHandover(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
         }
     }
     algoritmo = new Guloso(num_clusters, lim_inf, lim_sup, num_nos, g, numArestas/2);
-
 }
 
 void le(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){

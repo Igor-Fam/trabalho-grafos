@@ -15,6 +15,10 @@ private:
     Cluster** clusters;
     float valorSolucao;
     float tempo;
+    int numArestas;
+    int numClusters;
+    int numVert;
+    void preencheClusters(int *clusterVertice, int numeroVertices);
 public:
     Guloso(int numeroClusters, float limiteInferior, float limiteSuperior, int numeroVertices, Grafo *g, int numArestas);
     Guloso(int numeroClusters, float limiteInferior [], float limiteSuperior [], int numeroVertices, Grafo *g, int numArestas);

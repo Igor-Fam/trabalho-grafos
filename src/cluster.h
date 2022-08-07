@@ -11,10 +11,12 @@ class Aresta;
 class Cluster
 {
 private:
-    No* noInicial;
-    Aresta* listaArestas;
-    int* vertices;
-    float pesoVertices;
+    list<No*> nos;
+    list<Aresta*> arestas;
+    //No* noInicial;
+    //Aresta* listaArestas;
+    //int* vertices;
+    double pesoVertices;
     float pesoArestas;
     float limiteInferior;
     float limiteSuperior;
@@ -22,10 +24,10 @@ public:
     Cluster(){}
     Cluster(int noInicial_, Grafo* g, float limiteInferior, float limiteSuperior);
 
-    float getPesoVertices() const { return pesoVertices; }
-    void setPesoVertices(float pesoVertices_) { pesoVertices = pesoVertices_; }
+    double getPesoVertices() { return pesoVertices; }
+    void setPesoVertices(double pesoVertices_) { pesoVertices = pesoVertices_; }
 
-    float getPesoArestas() const { return pesoArestas; }
+    float getPesoArestas() { return pesoArestas; }
     void setPesoArestas(float pesoArestas_) { pesoArestas = pesoArestas_; }
 
     float getLimiteInferior() { return limiteInferior; }
@@ -33,7 +35,12 @@ public:
 
     float getLimiteSuperior() { return limiteSuperior; }
     void setLimiteSuperior(float limiteSuperior) { this->limiteSuperior = limiteSuperior; }
-    
+
+    list<No*> getNos(){return nos;}
+    list<Aresta*> getArestas(){return arestas;}
+
+    void addNo(No *v){nos.push_back(v);}
+    void addAresta(Aresta *a){arestas.push_back(a);}
 };
 
 #endif

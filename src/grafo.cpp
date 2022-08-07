@@ -153,7 +153,7 @@ void Grafo::troca(Aresta *a, Aresta *b)
 Aresta* Grafo::getArestas(int numArestas){
     Aresta *arestas = new Aresta[numArestas];
     int cont = 0;
-    cout << numArestas << endl;
+    //cout << numArestas << endl;
     for (No *v1 = primeiroNo; v1 != NULL; v1 = v1->proxNo)
     {
         Aresta *a = v1->primeiraAresta;
@@ -161,8 +161,13 @@ Aresta* Grafo::getArestas(int numArestas){
         {
             a->id_origem = v1->id;
             if (a->id_origem < a->id){
+                Aresta aux;
+                aux.id = a->id;
+                aux.id_origem = a->id_origem;
+                aux.peso = a->peso;
+                aux.idAresta = cont;
                 //arestas[cont] = new Aresta(a->id_origem, a->id, a->peso);
-                arestas[cont] = *a;
+                arestas[cont] = aux;
                 cont++;
             }
             a = a->proxAresta;
@@ -182,6 +187,5 @@ Aresta* Grafo::getArestas(int numArestas){
         cout << (arestas[b]).id_origem << " " << arestas[b].id << " " << arestas[b].peso << endl;
     }
     */
-
     return arestas;
 }

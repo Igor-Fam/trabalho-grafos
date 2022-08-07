@@ -13,6 +13,7 @@ class Aresta{
     private:
         int id;
         int id_origem;
+        int idAresta;
         Aresta* proxAresta;
         float peso;
         friend class No;
@@ -27,6 +28,10 @@ class Aresta{
         void printList();
         void fechoTransitivoDireto(set<int>* ftd, Grafo* g);
         bool fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti, set<int>* nosVisitados);
+        int getId(){return id;};
+        int getId_origem(){return id_origem;};
+        float getPeso(){return peso;};
+        void setPeso(float peso){this->peso = peso;}
 };
 
 
