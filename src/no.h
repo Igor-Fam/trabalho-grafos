@@ -42,7 +42,7 @@ public:
     void fechoTransitivoDireto(set<int>* ftd, Grafo* g);
     bool fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti);
     bool fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti, set<int>* nosVisitados);
-    void getAdjacencias(int* idsInvalidos, int* idInvalidoCont);
+    void getAdjacencias(int* idsInvalidos, int* idInvalidoCont, int idInicial);
     float getPeso(){return peso;}
     int getId(){return id;}
 };

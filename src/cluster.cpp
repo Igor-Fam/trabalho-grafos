@@ -7,7 +7,7 @@ using namespace std;
 
 Cluster::Cluster(int noInicial_, Grafo* g, float limiteInferior, float limiteSuperior){
     No *v = g->getNo(noInicial_);
-    nos.push_back(v);
+    nos[noInicial_] = v;
     this->limiteInferior = limiteInferior;
     this->limiteSuperior = limiteSuperior;
     this->pesoVertices = 0;

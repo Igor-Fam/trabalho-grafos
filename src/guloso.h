@@ -18,7 +18,7 @@ private:
     int numArestas;
     int numClusters;
     int numVert;
-    void preencheClusters(int *clusterVertice, int numeroVertices);
+    void preencheClusters(int *clusterVertice, int numeroVertices, int *idsInvalidos, int idInvalidoCont);
 public:
     Guloso(int numeroClusters, float limiteInferior, float limiteSuperior, int numeroVertices, Grafo *g, int numArestas);
     Guloso(int numeroClusters, float limiteInferior [], float limiteSuperior [], int numeroVertices, Grafo *g, int numArestas);

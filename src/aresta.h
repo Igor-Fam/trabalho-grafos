@@ -22,6 +22,7 @@ class Aresta{
     public:
         Aresta(int id, float peso = 0);
         Aresta(int id_origem, int id, float peso = 0);
+        Aresta(int id_origem, int id, int idAresta, float peso = 0);
         Aresta(){};
         ~Aresta(){};
         void addAresta(int id, float peso = 0);
@@ -32,6 +33,8 @@ class Aresta{
         int getId_origem(){return id_origem;};
         float getPeso(){return peso;};
         void setPeso(float peso){this->peso = peso;}
+        void setIdAresta(int id){this->idAresta = id;}
+        int getIdAresta(){return this->idAresta;}
 };
 
 

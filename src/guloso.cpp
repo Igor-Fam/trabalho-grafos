@@ -1,3 +1,4 @@
+/*
 #include "guloso.h"
 #include "cluster.h"
 #include <iostream>
@@ -18,11 +19,12 @@ Guloso::Guloso(int numeroClusters, float limiteInferior, float limiteSuperior, i
         idsInvalidos[i] = 0;
     }
 
+    int idInvalidoCont = 0;
+
     for (int i = 0; i < numeroClusters; i++)
     {
         int idInvalido = 1;
         int idInicial;
-        int idInvalidoCont = 0;
 
         do
         {
@@ -48,29 +50,28 @@ Guloso::Guloso(int numeroClusters, float limiteInferior, float limiteSuperior, i
 
         idsInvalidos[idInicial] = 1;
         clusterVertice[idInicial] = i;
-        cout << "Cluster: " << i << " IdInicial: " << idInicial << endl;
         clusters[i] = new Cluster(idInicial, g, limiteInferior, limiteSuperior);
         numVert++;
         float pesoIdInicial = g->getNo(idInicial)->getPeso();
-        clusters[i]->setPesoVertices(clusters[i]->getPesoVertices() + pesoIdInicial);
+        clusters[i]->setPesoVertices(pesoIdInicial);
+        cout << "Cluster " << i << " Id Inicial " << clusters[i]->getNos().at(idInicial)->getId() << " Peso " << clusters[i]->getNos().at(idInicial)->getPeso() << endl;
     }
-
-    delete[] idsInvalidos;
 
     this->candidatos = g->getArestas(numArestas);
     this->numArestas = numArestas;
     this->numClusters = numeroClusters;
     this->g = g;
 
-    preencheClusters(clusterVertice, numeroVertices);
+    preencheClusters(clusterVertice, numeroVertices, idsInvalidos, idInvalidoCont);
 }
 
 Guloso::Guloso(int numeroClusters, float limiteInferior[], float limiteSuperior[], int numeroVertices, Grafo *g, int numArestas)
 {
-    int numVert = 0;
+    numVert = 0;
     clusters = new Cluster *[numeroClusters];
     int *idsInvalidos = new int[numeroVertices];
     int *clusterVertice = new int[numeroVertices];
+
     for (int i = 0; i < numeroVertices; i++)
     {
         clusterVertice[i] = -1;
@@ -105,222 +106,565 @@ Guloso::Guloso(int numeroClusters, float limiteInferior[], float limiteSuperior[
 
         idsInvalidos[idInicial] = 1;
         clusterVertice[idInicial] = i;
-        cout << "Cluster: " << i << " IdInicial: " << idInicial << endl;
         clusters[i] = new Cluster(idInicial, g, limiteInferior[i], limiteSuperior[i]);
         numVert++;
-        // Precisa testar os limites ao inserir o primeiro vertice?
         float pesoIdInicial = g->getNo(idInicial)->getPeso();
-        clusters[i]->setPesoVertices(clusters[i]->getPesoVertices() + pesoIdInicial);
+        clusters[i]->setPesoVertices(pesoIdInicial);
+        cout << "Cluster " << i << " Id Inicial " << clusters[i]->getNos().at(idInicial)->getId() << " Peso " << clusters[i]->getNos().at(idInicial)->getPeso() << endl;
     }
-
-    delete[] idsInvalidos;
 
     this->candidatos = g->getArestas(numArestas);
     this->numArestas = numArestas;
     this->numClusters = numeroClusters;
     this->g = g;
 
-    preencheClusters(clusterVertice, numeroVertices);
+    preencheClusters(clusterVertice, numeroVertices, idsInvalidos, idInvalidoCont);
 }
 
-void Guloso::preencheClusters(int *clusterVertice, int numeroVertices)
+void Guloso::preencheClusters(int *clusterVertice, int numeroVertices, int *idsInvalidos, int idInvalidoCont)
 {
-    int numeroArestas = 0;
-    int *arestasUtilizadas = new int[numArestas];
-    for (int i = 0; i < numArestas; i++)
+    int *arestaValida = new int[this->numArestas];
+    int *clusterRecebeuAresta = new int[this->numClusters];
+
+    for (int j = 0; j < this->numArestas; j++)
     {
-        arestasUtilizadas[i] = 0;
+        arestaValida[j] = 0;
     }
-    while (numVert < numeroVertices && numeroArestas < numArestas)
+
+    for (int i = 0; i < this->numClusters; i++)
     {
-        int *clusterRecebeuAresta = new int[numClusters];
-        for (int i = 0; i < numClusters; i++)
+        clusterRecebeuAresta[i] = 0;
+    }
+
+    int numArestasInvalidas = 0;
+
+    do
+    {
+
+        for (int i = 0; i < this->numClusters; i++)
         {
-            clusterRecebeuAresta[i] = 0;
-        }
 
-        for (int i = 0; i < this->numArestas; i++)
-        {
-            Aresta a = this->candidatos[i];
+            cout << "Cluster " << i << endl;
 
-            cout << "Aresta analisada: " << a.getId_origem() << " " << a.getId() << endl;
+            Aresta *entraClusterI = NULL;
+            bool encerraDoWhile = false;
 
-            if (clusterVertice[a.getId()] != -1 && clusterVertice[a.getId_origem()] != -1 && clusterVertice[a.getId_origem()] != clusterVertice[a.getId()])
-                numeroArestas++;
-
-            if (clusterVertice[a.getId()] == -1 || clusterVertice[a.getId_origem()] == -1 || (clusterVertice[a.getId()] == clusterVertice[a.getId_origem()]))
+            do
             {
-                for (int j = 0; j < this->numClusters; j++)
+
+                int pesoVertice = 0;
+
+                for (int j = 0; j < this->numArestas; j++)
                 {
-                    if (clusterRecebeuAresta[j] == 0)
+
+                    Aresta a = this->candidatos[j];
+
+                    if (clusterVertice[a.getId()] != -1 && clusterVertice[a.getId_origem()] != -1 && clusterVertice[a.getId()] != clusterVertice[a.getId_origem()])
                     {
-                        bool existeVertAdjCluster = false;
-                        bool existeArestaEntreVertCluster = false;
-                        No *v = NULL;
-                        if (clusterVertice[a.getId_origem()] == j && clusterVertice[a.getId()] == -1)
+                        arestaValida[j] = 1;
+                        numArestasInvalidas += 1;
+                        continue;
+                    }
+
+                    if (arestaValida[j] == 0 && clusterVertice[a.getId_origem()] == i && ((clusterVertice[a.getId()] == -1 && g->getNo(a.getId())->getPeso() + clusters[i]->getPesoVertices() < clusters[i]->getLimiteSuperior()) || clusterVertice[a.getId()] == i))
+                    {
+                        if (entraClusterI != NULL && clusterVertice[a.getId()] == -1 && clusters[i]->getPesoVertices() < clusters[i]->getLimiteInferior() && pesoVertice < g->getNo(a.getId())->getPeso())
                         {
-                            int id = a.getId();
-                            v = g->getNo(id);
-                            existeVertAdjCluster = true;
+                            delete entraClusterI;
                         }
-
-                        else if (clusterVertice[a.getId()] == j && clusterVertice[a.getId_origem()] == -1)
+                        if (clusterVertice[a.getId()] == -1)
                         {
-                            int id = a.getId_origem();
-                            v = g->getNo(id);
-                            existeVertAdjCluster = true;
+                            pesoVertice = g->getNo(a.getId())->getPeso();
                         }
-
-                        else if (clusterVertice[a.getId()] == j && clusterVertice[a.getId_origem()] == j && arestasUtilizadas[i] == 0)
+                        if (entraClusterI == NULL)
                         {
-                            existeArestaEntreVertCluster = true;
+                            entraClusterI = new Aresta(a.getId_origem(), a.getId(), j, a.getPeso());
                         }
-
-                        double pesoVertice;
-                        double pesoVertCluster;
-
-                        if (existeVertAdjCluster || existeArestaEntreVertCluster)
+                    }
+                    else if (arestaValida[j] == 0 && clusterVertice[a.getId()] == i && ((clusterVertice[a.getId_origem()] == -1 && g->getNo(a.getId_origem())->getPeso() + clusters[i]->getPesoVertices() < clusters[i]->getLimiteSuperior()) || clusterVertice[a.getId_origem()] == i))
+                    {
+                        if (entraClusterI != NULL && clusterVertice[a.getId_origem()] == -1 && clusters[i]->getPesoVertices() < clusters[i]->getLimiteInferior() && pesoVertice < g->getNo(a.getId_origem())->getPeso())
                         {
-                            if (existeVertAdjCluster)
+                            delete entraClusterI;
+                            entraClusterI = new Aresta(a.getId_origem(), a.getId(), j, a.getPeso());
+                        }
+                        if (clusterVertice[a.getId_origem()] == -1)
+                        {
+                            pesoVertice = g->getNo(a.getId_origem())->getPeso();
+                        }
+                        if (entraClusterI == NULL)
+                        {
+                            entraClusterI = new Aresta(a.getId_origem(), a.getId(), j, a.getPeso());
+                        }
+                    }
+                }
+
+                if (entraClusterI != NULL)
+                {
+                    cout << "Entrou na solução" << endl;
+                    cout << "Id Origem " << entraClusterI->getId_origem() << " "
+                         << "Id " << entraClusterI->getId() << " "
+                         << "Peso " << entraClusterI->getPeso() << endl;
+                    try
+                    {
+                        clusters[i]->getNos().at(entraClusterI->getId());
+                    }
+                    catch (const out_of_range &oor)
+                    {
+                        clusters[i]->addNo(g->getNo(entraClusterI->getId()));
+                        clusters[i]->setPesoVertices(g->getNo(entraClusterI->getId())->getPeso());
+                        clusterVertice[entraClusterI->getId()] = i;
+                        numVert += 1;
+                        idsInvalidos[entraClusterI->getId()] = 1;
+                        idInvalidoCont += 1;
+                    }
+
+                    try
+                    {
+                        clusters[i]->getNos().at(entraClusterI->getId_origem());
+                    }
+                    catch (const out_of_range &oor)
+                    {
+                        clusters[i]->addNo(g->getNo(entraClusterI->getId_origem()));
+                        clusters[i]->setPesoVertices(g->getNo(entraClusterI->getId_origem())->getPeso());
+                        clusterVertice[entraClusterI->getId_origem()] = i;
+                        numVert += 1;
+                        idsInvalidos[entraClusterI->getId_origem()] = 1;
+                        idInvalidoCont += 1;
+                    }
+
+                    try
+                    {
+                        clusters[i]->getArestas().at(entraClusterI->getIdAresta());
+                    }
+                    catch (const out_of_range &oor)
+                    {
+                        clusters[i]->addAresta(entraClusterI);
+                        clusters[i]->setPesoArestas(entraClusterI->getPeso());
+                        numArestasInvalidas += 1;
+                        arestaValida[entraClusterI->getIdAresta()] = 1;
+                        clusterRecebeuAresta[i] = 1;
+                    }
+                }
+                else
+                {
+                    cout << "Procurando novo id inicial para o cluster" << endl;
+                    int idInvalido = 1;
+                    int idInicial;
+
+                    for (int l = 0; l < numeroVertices; l++)
+                    {
+                        if (idsInvalidos[l] == 0)
+                        {
+                            if (g->getNo(l)->getPeso() + clusters[i]->getPesoVertices() <= clusters[i]->getLimiteSuperior())
                             {
-                                cout << "Entrou na solução 3" << endl;
-                                //cout << a.getId_origem() << " " << a.getId() << " " << a.getPeso() << endl;
-                                pesoVertice = v->getPeso();
-                                pesoVertCluster = clusters[j]->getPesoVertices() + pesoVertice;
-                                if (pesoVertCluster < clusters[j]->getLimiteSuperior())
+                                idInvalido = 0;
+                                idInicial = l;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (idInvalido == 0)
+                    {
+                        idInvalidoCont += 1;
+                        g->getNo(idInicial)->getAdjacencias(idsInvalidos, &idInvalidoCont);
+                    }
+                    else
+                    {
+                        for (int l = 0; l < numeroVertices; l++)
+                        {
+                            if (idsInvalidos[l] != 1)
+                            {
+                                if (g->getNo(l)->getPeso() + clusters[i]->getPesoVertices() <= clusters[i]->getLimiteSuperior())
                                 {
-                                    clusters[j]->addNo(v);
-                                    clusters[j]->setPesoVertices(pesoVertCluster);
-                                    clusterVertice[v->getId()] = j;
-                                    numVert++;
+                                    idInvalido = 0;
+                                    idInicial = l;
+                                    break;
                                 }
                             }
-                            cout << "Entrou na solução 4" << endl;
-                            //cout << j << endl;
-                            clusters[j]->addAresta(&(this->candidatos[i]));
-                            arestasUtilizadas[i] = 1;
-                            numeroArestas++;
-                            clusters[j]->setPesoArestas(clusters[j]->getPesoArestas() + a.getPeso());
-                            clusterRecebeuAresta[j] = 1;
-                            break;
                         }
                     }
-                }
-            }
-        }
 
-        
-
-        for (int i = 0; i < numClusters; i++)
-        {
-            if (clusterRecebeuAresta[i] == 0)
-            {
-                for (int j = 0; j < numArestas; j++)
-                {
-                    Aresta a = this->candidatos[j];
-                    cout << "Aresta analisada: " << a.getId_origem() << " " << a.getId() << endl;
-                    //cout << i << endl;
-
-                    if (clusterVertice[a.getId()] != -1 && clusterVertice[a.getId_origem()] != -1 && clusterVertice[a.getId_origem()] != clusterVertice[a.getId()])
-                        numeroArestas++;
-
-                    if ((clusterVertice[a.getId_origem()] == -1 && clusterVertice[a.getId()] == -1) || (clusterVertice[a.getId()] == clusterVertice[a.getId_origem()] == i))
+                    if (idInvalido == 0)
                     {
-                        No *v1 = NULL;
-                        No *v2 = NULL;
-                        v1 = g->getNo(a.getId_origem());
-                        v2 = g->getNo(a.getId());
+                        idsInvalidos[idInicial] = 1;
+                        clusterVertice[idInicial] = i;
+                        clusters[i]->addNo(g->getNo(idInicial));
+                        clusters[i]->setPesoVertices(g->getNo(idInicial)->getPeso());
+                        numVert += 1;
+                    }
 
-                        //cout << clusterVertice[a.getId()] << " " << clusterVertice[a.getId_origem()] << endl;
-                        if (clusterVertice[a.getId()] == clusterVertice[a.getId_origem()] == i && arestasUtilizadas[i] == 0)
-                        {
-                            cout << "Entrou na solução1" << endl;
-                            numeroArestas++;
-                            clusters[i]->addAresta(&(this->candidatos[j]));
-                            arestasUtilizadas[j] == 1;
-                            clusters[i]->setPesoArestas(clusters[i]->getPesoArestas() + a.getPeso());
-                            clusterRecebeuAresta[i] = 1;
-                            break;
-                        }
-
-                        else if (v1->getPeso() + v2->getPeso() + clusters[i]->getPesoVertices() < clusters[i]->getLimiteSuperior())
-                        {
-                            cout << "Entrou na solução2" << endl;
-                            clusters[i]->addNo(v1);
-                            clusters[i]->addNo(v2);
-                            numeroArestas++;
-                            clusters[i]->addAresta(&(this->candidatos[j]));
-                            arestasUtilizadas[j] = 1;
-                            clusters[i]->setPesoVertices(v1->getPeso() + v2->getPeso() + clusters[i]->getPesoVertices());
-                            clusters[i]->setPesoArestas(clusters[i]->getPesoArestas() + a.getPeso());
-                            clusterVertice[v1->getId()] = i;
-                            clusterVertice[v2->getId()] = i;
-                            clusterRecebeuAresta[i] = 1;
-                            numVert++;
-                            numVert++;
-                            break;
-                        }
-
-                        
-                        No *menor = NULL;
-                        No *maior = NULL;
-                        if (v1->getPeso() < v2->getPeso())
-                        {
-                            menor = v1;
-                            maior = v2;
-                        }
-                        else
-                        {
-                            menor = v2;
-                            maior = v1;
-                        }
-
-                        if (menor->getPeso() + clusters[i]->getPesoVertices() < clusters[i]->getLimiteSuperior())
-                        {
-                            clusters[i]->addNo(menor);
-                            clusters[i]->setPesoVertices(menor->getPeso() + clusters[i]->getPesoVertices());
-                            clusterVertice[menor->getId()] = i;
-                            clusterRecebeuAresta[i] = 1;
-                            numVert++;
-                            break;
-                        }
-
-                        if (maior->getPeso() + clusters[i]->getPesoVertices() < clusters[i]->getLimiteSuperior())
-                        {
-                            clusters[i]->addNo(maior);
-                            clusters[i]->setPesoVertices(maior->getPeso() + clusters[i]->getPesoVertices());
-                            clusterVertice[maior->getId()] = i;
-                            clusterRecebeuAresta[i] = 1;
-                            numVert++;
-                            break;
-                        }
+                    if (idInvalido != 0)
+                    {
+                        encerraDoWhile = true;
                     }
                 }
-            }
+
+            } while (entraClusterI == NULL && encerraDoWhile == false);
         }
-    }
+    } while (numArestasInvalidas < numArestas && numVert < numeroVertices);
 
-    cout << "Nv " << numVert << "NT " << numeroVertices << endl;
-    cout << "Na " << numArestas << "AT " << this->numArestas << endl;
-
-    cout << numClusters << endl;
-    for (int i = 0; i < numClusters; i++)
+    for (int i = 0; i < this->numClusters; i++)
     {
-        cout << "Cluster " << i << endl;
-        list<No *> aux = clusters[i]->getNos();
-        auto j = aux.begin();
-        while (j != aux.end())
+        cout << "Peso Cluster Vertice " << clusters[i]->getPesoVertices() << endl;
+        cout << "Vertices" << endl;
+        unordered_map<int, No *> aux = clusters[i]->getNos();
+        auto k = aux.begin();
+        while (k != aux.end())
         {
-            cout << (*j)->getId() << " ";
-            ++j;
-        }
-        cout << endl;
-        list<Aresta *> auxA = clusters[i]->getArestas();
-        auto k = auxA.begin();
-        while (k != auxA.end())
-        {
-            cout << (*k)->getId_origem() << " " << (*k)->getId() << " " << (*k)->getPeso() << endl;
+            cout << k->first << " ";
             ++k;
         }
+        cout << endl;
+        cout << "Arestas" << endl;
+        unordered_map<int, Aresta *> aux2 = clusters[i]->getArestas();
+        auto m = aux2.begin();
+        while (m != aux2.end())
+        {
+            cout << m->second->getId_origem() << " " << m->second->getId() << " " << m->second->getPeso() << endl;
+            ++m;
+        }
+        cout << endl;
+    }
+}
+*/
+
+#include "guloso.h"
+#include "cluster.h"
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+Guloso::Guloso(int numeroClusters, float limiteInferior, float limiteSuperior, int numeroVertices, Grafo *g, int numArestas)
+{
+    numVert = 0;
+    clusters = new Cluster *[numeroClusters];
+    int *idsInvalidos = new int[numeroVertices];
+    int *clusterVertice = new int[numeroVertices];
+    for (int i = 0; i < numeroVertices; i++)
+    {
+        clusterVertice[i] = -1;
+        idsInvalidos[i] = -1;
+    }
+
+    int idInvalidoCont = 0;
+
+    for (int i = 0; i < numeroClusters; i++)
+    {
+        int idInvalido = 1;
+        int idInicial;
+
+        do
+        {
+            srand(time(0) * i ^ 3);
+            idInicial = rand() % numeroVertices;
+            idInvalido = idsInvalidos[idInicial];
+        } while (idInvalido != -1 && idInvalidoCont < numeroVertices);
+
+        if (idInvalido == -1)
+        {
+            idInvalidoCont++;
+            g->getNo(idInicial)->getAdjacencias(idsInvalidos, &idInvalidoCont, idInicial);
+        }
+        else
+        {
+            do
+            {
+                srand(time(0));
+                idInicial = rand() % numeroVertices;
+                idInvalido = idsInvalidos[idInicial];
+            } while (idInvalido == -3);
+        }
+
+        idsInvalidos[idInicial] = -3;
+        clusterVertice[idInicial] = i;
+        clusters[i] = new Cluster(idInicial, g, limiteInferior, limiteSuperior);
+        numVert++;
+        float pesoIdInicial = g->getNo(idInicial)->getPeso();
+        clusters[i]->setPesoVertices(pesoIdInicial);
+        cout << "Cluster " << i << " Id Inicial " << clusters[i]->getNos().at(idInicial)->getId() << " Peso " << clusters[i]->getNos().at(idInicial)->getPeso() << endl;
+    }
+
+    this->candidatos = g->getArestas(numArestas);
+    this->numArestas = numArestas;
+    this->numClusters = numeroClusters;
+    this->g = g;
+
+    preencheClusters(clusterVertice, numeroVertices, idsInvalidos, idInvalidoCont);
+}
+
+Guloso::Guloso(int numeroClusters, float limiteInferior[], float limiteSuperior[], int numeroVertices, Grafo *g, int numArestas)
+{
+    numVert = 0;
+    clusters = new Cluster *[numeroClusters];
+    int *idsInvalidos = new int[numeroVertices];
+    int *clusterVertice = new int[numeroVertices];
+
+    for (int i = 0; i < numeroVertices; i++)
+    {
+        clusterVertice[i] = -1;
+        idsInvalidos[i] = -1;
+    }
+     
+    int idInvalidoCont = 0;
+    
+    for (int i = 0; i < numeroClusters; i++)
+    {
+        int idInvalido = 1;
+        int idInicial;
+        do
+        {
+            srand(time(0) * i ^ 3);
+            idInicial = rand() % numeroVertices;
+            idInvalido = idsInvalidos[idInicial];
+        } while (idInvalido != -1 && idInvalidoCont < numeroVertices);
+
+        if (idInvalido == -1)
+        {
+            idInvalidoCont++;
+            g->getNo(idInicial)->getAdjacencias(idsInvalidos, &idInvalidoCont, idInicial);
+        }
+        else
+        {
+            do
+            {
+                srand(time(NULL) * i);
+                idInicial = rand() % numeroVertices;
+                idInvalido = idsInvalidos[idInicial];
+            } while (idInvalido == -3);
+        }
+
+        idsInvalidos[idInicial] = -3;
+        clusterVertice[idInicial] = i;
+        clusters[i] = new Cluster(idInicial, g, limiteInferior[i], limiteSuperior[i]);
+        numVert++;
+        float pesoIdInicial = g->getNo(idInicial)->getPeso();
+        clusters[i]->setPesoVertices(pesoIdInicial);
+        cout << "Cluster " << i << " Id Inicial " << clusters[i]->getNos().at(idInicial)->getId() << " Peso " << clusters[i]->getNos().at(idInicial)->getPeso() << endl;
+    }
+
+    this->candidatos = g->getArestas(numArestas);
+    this->numArestas = numArestas;
+    this->numClusters = numeroClusters;
+    this->g = g;
+
+    preencheClusters(clusterVertice, numeroVertices, idsInvalidos, idInvalidoCont);
+}
+
+void Guloso::preencheClusters(int *clusterVertice, int numeroVertices, int *idsInvalidos, int idInvalidoCont)
+{
+    int *arestaValida = new int[this->numArestas];
+    int *clusterRecebeuAresta = new int[this->numClusters];
+
+    for (int j = 0; j < this->numArestas; j++)
+    {
+        arestaValida[j] = 0;
+    }
+
+    for (int i = 0; i < this->numClusters; i++)
+    {
+        clusterRecebeuAresta[i] = 0;
+    }
+
+    int numArestasInvalidas = 0;
+
+    do
+    {
+
+        for (int i = 0; i < this->numClusters; i++)
+        {
+
+            //cout << "Cluster " << i << endl;
+
+            Aresta *entraClusterI = NULL;
+            bool encerraDoWhile = false;
+
+            do
+            {
+
+                int pesoVertice = 0;
+
+                for (int j = 0; j < this->numArestas; j++)
+                {
+
+                    Aresta a = this->candidatos[j];
+
+                    if (clusterVertice[a.getId()] != -1 && clusterVertice[a.getId_origem()] != -1 && clusterVertice[a.getId()] != clusterVertice[a.getId_origem()])
+                    {
+                        arestaValida[j] = 1;
+                        numArestasInvalidas += 1;
+                        continue;
+                    }
+
+                    if (arestaValida[j] == 0 && clusterVertice[a.getId_origem()] == i && ((clusterVertice[a.getId()] == -1 && g->getNo(a.getId())->getPeso() + clusters[i]->getPesoVertices() < clusters[i]->getLimiteSuperior()) || clusterVertice[a.getId()] == i))
+                    {
+                        if (entraClusterI != NULL && clusterVertice[a.getId()] == -1 && clusters[i]->getPesoVertices() < clusters[i]->getLimiteInferior() && pesoVertice < g->getNo(a.getId())->getPeso())
+                        {
+                            delete entraClusterI;
+                        }
+                        if (clusterVertice[a.getId()] == -1)
+                        {
+                            pesoVertice = g->getNo(a.getId())->getPeso();
+                        }
+                        if (entraClusterI == NULL)
+                        {
+                            entraClusterI = new Aresta(a.getId_origem(), a.getId(), j, a.getPeso());
+                        }
+                    }
+                    else if (arestaValida[j] == 0 && clusterVertice[a.getId()] == i && ((clusterVertice[a.getId_origem()] == -1 && g->getNo(a.getId_origem())->getPeso() + clusters[i]->getPesoVertices() < clusters[i]->getLimiteSuperior()) || clusterVertice[a.getId_origem()] == i))
+                    {
+                        if (entraClusterI != NULL && clusterVertice[a.getId_origem()] == -1 && clusters[i]->getPesoVertices() < clusters[i]->getLimiteInferior() && pesoVertice < g->getNo(a.getId_origem())->getPeso())
+                        {
+                            delete entraClusterI;
+                            entraClusterI = new Aresta(a.getId_origem(), a.getId(), j, a.getPeso());
+                        }
+                        if (clusterVertice[a.getId_origem()] == -1)
+                        {
+                            pesoVertice = g->getNo(a.getId_origem())->getPeso();
+                        }
+                        if (entraClusterI == NULL)
+                        {
+                            entraClusterI = new Aresta(a.getId_origem(), a.getId(), j, a.getPeso());
+                        }
+                    }
+                }
+
+                if (entraClusterI != NULL)
+                {
+                    /*cout << "Entrou na solução" << endl;
+                    cout << "Id Origem " << entraClusterI->getId_origem() << " "
+                         << "Id " << entraClusterI->getId() << " "
+                         << "Peso " << entraClusterI->getPeso() << endl;*/
+                    try
+                    {
+                        clusters[i]->getNos().at(entraClusterI->getId());
+                    }
+                    catch (const out_of_range &oor)
+                    {
+                        clusters[i]->addNo(g->getNo(entraClusterI->getId()));
+                        clusters[i]->setPesoVertices(g->getNo(entraClusterI->getId())->getPeso());
+                        clusterVertice[entraClusterI->getId()] = i;
+                        numVert += 1;
+                        idsInvalidos[entraClusterI->getId()] = -3;
+                        idInvalidoCont += 1;
+                    }
+
+                    try
+                    {
+                        clusters[i]->getNos().at(entraClusterI->getId_origem());
+                    }
+                    catch (const out_of_range &oor)
+                    {
+                        clusters[i]->addNo(g->getNo(entraClusterI->getId_origem()));
+                        clusters[i]->setPesoVertices(g->getNo(entraClusterI->getId_origem())->getPeso());
+                        clusterVertice[entraClusterI->getId_origem()] = i;
+                        numVert += 1;
+                        idsInvalidos[entraClusterI->getId_origem()] = -3;
+                        idInvalidoCont += 1;
+                    }
+
+                    try
+                    {
+                        clusters[i]->getArestas().at(entraClusterI->getIdAresta());
+                    }
+                    catch (const out_of_range &oor)
+                    {
+                        clusters[i]->addAresta(entraClusterI);
+                        clusters[i]->setPesoArestas(entraClusterI->getPeso());
+                        numArestasInvalidas += 1;
+                        arestaValida[entraClusterI->getIdAresta()] = 1;
+                        clusterRecebeuAresta[i] = 1;
+                    }
+                }
+                else
+                {
+                    //cout << "Procurando novo id inicial para o cluster" << endl;
+                    int idInvalido = 1;
+                    int idInicial;
+
+                    for (int l = 0; l < numeroVertices; l++)
+                    {
+                        if (idsInvalidos[l] == i)
+                        {
+                            if (g->getNo(l)->getPeso() + clusters[i]->getPesoVertices() <= clusters[i]->getLimiteSuperior())
+                            {
+                                idInvalido = 0;
+                                idInicial = l;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (idInvalido == 0)
+                    {
+                        idInvalidoCont += 1;
+                        g->getNo(idInicial)->getAdjacencias(idsInvalidos, &idInvalidoCont, idInicial);
+                    }
+                    else
+                    {
+                        for (int l = 0; l < numeroVertices; l++)
+                        {
+                            if (idsInvalidos[l] == -1){
+                                if (g->getNo(l)->getPeso() + clusters[i]->getPesoVertices() <= clusters[i]->getLimiteSuperior())
+                                {
+                                    idInvalido = 0;
+                                    idInicial = l;
+                                    break;
+                                }
+                            }
+                            else if (idsInvalidos[l] != -3)
+                            {
+                                if (g->getNo(l)->getPeso() + clusters[i]->getPesoVertices() <= clusters[i]->getLimiteSuperior())
+                                {
+                                    idInvalido = 0;
+                                    idInicial = l;
+                                }
+                            }
+                        }
+                    }
+
+                    if (idInvalido == 0)
+                    {
+                        idsInvalidos[idInicial] = -3;
+                        clusterVertice[idInicial] = i;
+                        clusters[i]->addNo(g->getNo(idInicial));
+                        clusters[i]->setPesoVertices(g->getNo(idInicial)->getPeso());
+                        numVert += 1;
+                    }
+
+                    if (idInvalido != 0)
+                    {
+                        encerraDoWhile = true;
+                    }
+                }
+
+            } while (entraClusterI == NULL && encerraDoWhile == false);
+        }
+    } while (numArestasInvalidas < numArestas && numVert < numeroVertices);
+
+    for (int i = 0; i < this->numClusters; i++)
+    {
+        cout << "Peso total dos vertices do cluster: " << clusters[i]->getPesoVertices() << endl;
+        cout << "Vertices" << endl;
+        unordered_map<int, No *> aux = clusters[i]->getNos();
+        auto k = aux.begin();
+        while (k != aux.end())
+        {
+            cout << k->first << " ";
+            ++k;
+        }
+        cout << endl;
+        cout << "Arestas" << endl;
+        unordered_map<int, Aresta *> aux2 = clusters[i]->getArestas();
+        auto m = aux2.begin();
+        while (m != aux2.end())
+        {
+            cout << m->second->getId_origem() << " " << m->second->getId() << " " << m->second->getPeso() << endl;
+            ++m;
+        }
+        cout << endl;
     }
 }

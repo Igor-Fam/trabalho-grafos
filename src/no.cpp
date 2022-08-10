@@ -124,13 +124,13 @@ bool No::fechoTransitivoIndireto(int id, Grafo* g, set<int>* fti, set<int>* nosV
 
 }
 
-void No:: getAdjacencias(int* idsInvalidos, int* idInvalidoCont){
+void No:: getAdjacencias(int* idsInvalidos, int* idInvalidoCont, int idInicial){
     Aresta* a = primeiraAresta;
     while(a != nullptr){
-        if(idsInvalidos[a->id] == 0){
+        if(idsInvalidos[a->id] == -1){
             (*idInvalidoCont)++;
         }
-        idsInvalidos[a->id] = 2;
+        idsInvalidos[a->id] = idInicial;
         a = a->proxAresta;
     }
 }

@@ -153,7 +153,6 @@ void Grafo::troca(Aresta *a, Aresta *b)
 Aresta* Grafo::getArestas(int numArestas){
     Aresta *arestas = new Aresta[numArestas];
     int cont = 0;
-    //cout << numArestas << endl;
     for (No *v1 = primeiroNo; v1 != NULL; v1 = v1->proxNo)
     {
         Aresta *a = v1->primeiraAresta;
@@ -166,7 +165,6 @@ Aresta* Grafo::getArestas(int numArestas){
                 aux.id_origem = a->id_origem;
                 aux.peso = a->peso;
                 aux.idAresta = cont;
-                //arestas[cont] = new Aresta(a->id_origem, a->id, a->peso);
                 arestas[cont] = aux;
                 cont++;
             }
@@ -174,18 +172,7 @@ Aresta* Grafo::getArestas(int numArestas){
         }
     }
     
-    /*
-    for (int b = 0; b < numArestas; b++){
-        cout << (arestas[b]).id_origem << " " << arestas[b].id << " " << arestas[b].peso << endl;
-    }
-    */
-    
     QuickSort(arestas, 0, cont - 1);
-
-    /*
-    for (int b = 0; b < numArestas; b++){
-        cout << (arestas[b]).id_origem << " " << arestas[b].id << " " << arestas[b].peso << endl;
-    }
-    */
+    
     return arestas;
 }
