@@ -173,6 +173,6 @@ Aresta* Grafo::getArestas(int numArestas){
     }
     
     QuickSort(arestas, 0, cont - 1);
-    
+   
     return arestas;
 }

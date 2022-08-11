@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void leHandover(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
+void leHandover(ifstream &arq_ent, Grafo *g, Guloso *algoritmo, string nomeArquivo){
     long long num_nos;
     long long num_clusters;
     double lim_inf = 0;
@@ -38,10 +38,10 @@ void leHandover(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
             }
         }
     }
-    algoritmo = new Guloso(num_clusters, lim_inf, lim_sup, num_nos, g, numArestas/2);
+    algoritmo = new Guloso(num_clusters, lim_inf, lim_sup, num_nos, g, numArestas/2, nomeArquivo);
 }
 
-void le(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
+void le(ifstream &arq_ent, Grafo *g, Guloso *algoritmo, string nomeArquivo){
     long long num_nos;
     long long num_clusters;
 
@@ -81,18 +81,18 @@ void le(ifstream &arq_ent, Grafo *g, Guloso *algoritmo){
         g->addAresta(id_origem, id_dest, pesoAresta);
     }
 
-    algoritmo = new Guloso(num_clusters, lim_inf, lim_sup, num_nos, g, numArestas);
-
+    algoritmo = new Guloso(num_clusters, lim_inf, lim_sup, num_nos, g, numArestas, nomeArquivo);
+    
     delete [] lim_inf, lim_sup;
 }
 
-void leArquivoEntrada(ifstream &arq_ent, string tipo_instancia, Grafo *g, Guloso *algoritmo){
+void leArquivoEntrada(ifstream &arq_ent, string tipo_instancia, Grafo *g, Guloso *algoritmo, string nomeArquivo){
     string s = "Handover";
     if (strcasecmp(tipo_instancia.c_str(), s.c_str()) == 0){
-        leHandover(arq_ent, g, algoritmo);
+        leHandover(arq_ent, g, algoritmo, nomeArquivo);
     }
     else{
-        le(arq_ent, g, algoritmo);
+        le(arq_ent, g, algoritmo, nomeArquivo);
     }
 }
 
@@ -100,10 +100,10 @@ int main(int argc, char **argv)
 {
     Grafo *g = new Grafo(false);
     Guloso *algoritmo;
-    ifstream arq_ent, arq_saida;
+    ifstream arq_ent;
     arq_ent.open(argv[1], ios::in);
     if (arq_ent.is_open()){
-        leArquivoEntrada(arq_ent, argv[3], g, algoritmo);
+        leArquivoEntrada(arq_ent, argv[3], g, algoritmo, argv[2]);
         arq_ent.close();
     }
     else{
