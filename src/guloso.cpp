@@ -6,6 +6,7 @@
 #include <ctime>
 #include <vector>
 #include <chrono>
+#include <unordered_map>
 
 using relogio_t = std::chrono::high_resolution_clock;
 using tempo_t = relogio_t::time_point;
@@ -245,13 +246,16 @@ Guloso::Guloso(int numeroClusters, float limiteInferior[], float limiteSuperior[
 
 void Guloso::preencheClusters(int *clusterVertice, int numeroVertices, int *idsInvalidos, int idInvalidoCont, string nomeArquivo, tempo_t start)
 {
-    int *arestaValida = new int[this->numArestas];
+    //int *arestaValida = new int[this->numArestas];
+    unordered_map<int, bool> arestaValida;
+
     int *clusterRecebeuAresta = new int[this->numClusters];
     vector<vector<int>> vertInvalidoParaClusters(numeroVertices, std::vector<int>(numClusters));
 
     for (int j = 0; j < this->numArestas; j++)
     {
-        arestaValida[j] = 0;
+        Aresta a = candidatos[j];
+        arestaValida[a.getIdAresta()] = true;
     }
 
     for (int i = 0; i < this->numClusters; i++)
@@ -279,27 +283,34 @@ void Guloso::preencheClusters(int *clusterVertice, int numeroVertices, int *idsI
             do
             {
                 int pesoVertice = 0;
-
-                for (int j = 0; j < this->numArestas; j++)
-                {
-                    Aresta a = this->candidatos[j];
+                vector<Aresta> vetorCandidatos;
+                for(int i = 0; i < numArestas; i++){
+                    vetorCandidatos.push_back(candidatos[i]);
+                }
+                char c;
+                cin >> c;
+                cout << "numArestasInvalidas: " << numArestasInvalidas << "; numVert: " << numVert << endl;
+                while(!vetorCandidatos.empty())
+                {   
+                    cout << vetorCandidatos.size() << endl;
+                    Aresta a = vetorCandidatos[0];
 
                     if (clusterVertice[a.getId()] != -1 && clusterVertice[a.getId_origem()] != -1 && clusterVertice[a.getId()] != clusterVertice[a.getId_origem()])
                     {
 
-                        if (arestaValida[j] == 0)
+                        if (arestaValida[a.getIdAresta()])
                         {
-                            arestaValida[j] = 1;
+                            arestaValida[a.getIdAresta()] = false;
                             numArestasInvalidas += 1;
                         }
 
                         continue;
                     }
 
-                    if (arestaValida[j] == 0 && clusterVertice[a.getId_origem()] == i && (clusterVertice[a.getId()] == -1 && g->getNo(a.getId())->getPeso() + clusters[i]->getPesoVertices() > clusters[i]->getLimiteSuperior()))
+                    if (arestaValida[a.getIdAresta()] && clusterVertice[a.getId_origem()] == i && (clusterVertice[a.getId()] == -1 && g->getNo(a.getId())->getPeso() + clusters[i]->getPesoVertices() > clusters[i]->getLimiteSuperior()))
                     {
 
-                        arestaValida[j] = 1;
+                        arestaValida[a.getIdAresta()] = false;
                         numArestasInvalidas += 1;
 
                         if (vertInvalidoParaClusters[a.getId()][i] == 0)
@@ -310,10 +321,10 @@ void Guloso::preencheClusters(int *clusterVertice, int numeroVertices, int *idsI
                         continue;
                     }
 
-                    else if (arestaValida[j] == 0 && clusterVertice[a.getId()] == i && ((clusterVertice[a.getId_origem()] == -1 && g->getNo(a.getId_origem())->getPeso() + clusters[i]->getPesoVertices() > clusters[i]->getLimiteSuperior())))
+                    else if (arestaValida[a.getIdAresta()] && clusterVertice[a.getId()] == i && ((clusterVertice[a.getId_origem()] == -1 && g->getNo(a.getId_origem())->getPeso() + clusters[i]->getPesoVertices() > clusters[i]->getLimiteSuperior())))
                     {
 
-                        arestaValida[j] = 1;
+                        arestaValida[a.getIdAresta()] = false;
                         numArestasInvalidas += 1;
 
                         if (vertInvalidoParaClusters[a.getId_origem()][i] == 0)
@@ -323,7 +334,7 @@ void Guloso::preencheClusters(int *clusterVertice, int numeroVertices, int *idsI
                         continue;
                     }
 
-                    if (arestaValida[j] == 0 && clusterVertice[a.getId_origem()] == i && ((clusterVertice[a.getId()] == -1 && g->getNo(a.getId())->getPeso() + clusters[i]->getPesoVertices() <= clusters[i]->getLimiteSuperior()) || clusterVertice[a.getId()] == i))
+                    if (arestaValida[a.getIdAresta()] && clusterVertice[a.getId_origem()] == i && ((clusterVertice[a.getId()] == -1 && g->getNo(a.getId())->getPeso() + clusters[i]->getPesoVertices() <= clusters[i]->getLimiteSuperior()) || clusterVertice[a.getId()] == i))
                     {
                         if (entraClusterI != NULL && clusterVertice[a.getId()] == -1 && clusters[i]->getPesoVertices() < clusters[i]->getLimiteInferior() && pesoVertice < g->getNo(a.getId())->getPeso())
                         {
@@ -337,10 +348,10 @@ void Guloso::preencheClusters(int *clusterVertice, int numeroVertices, int *idsI
 
                         if (entraClusterI == NULL)
                         {
-                            entraClusterI = new Aresta(a.getId_origem(), a.getId(), j, a.getPeso());
+                            entraClusterI = new Aresta(a.getId_origem(), a.getId(), a.getIdAresta(), a.getPeso());
                         }
                     }
-                    else if (arestaValida[j] == 0 && clusterVertice[a.getId()] == i && ((clusterVertice[a.getId_origem()] == -1 && g->getNo(a.getId_origem())->getPeso() + clusters[i]->getPesoVertices() <= clusters[i]->getLimiteSuperior()) || clusterVertice[a.getId_origem()] == i))
+                    else if (arestaValida[a.getIdAresta()] && clusterVertice[a.getId()] == i && ((clusterVertice[a.getId_origem()] == -1 && g->getNo(a.getId_origem())->getPeso() + clusters[i]->getPesoVertices() <= clusters[i]->getLimiteSuperior()) || clusterVertice[a.getId_origem()] == i))
                     {
                         if (entraClusterI != NULL && clusterVertice[a.getId_origem()] == -1 && clusters[i]->getPesoVertices() < clusters[i]->getLimiteInferior() && pesoVertice < g->getNo(a.getId_origem())->getPeso())
                         {
@@ -354,9 +365,10 @@ void Guloso::preencheClusters(int *clusterVertice, int numeroVertices, int *idsI
 
                         if (entraClusterI == NULL)
                         {
-                            entraClusterI = new Aresta(a.getId_origem(), a.getId(), j, a.getPeso());
+                            entraClusterI = new Aresta(a.getId_origem(), a.getId(), a.getIdAresta(), a.getPeso());
                         }
                     }
+                    vetorCandidatos.erase(vetorCandidatos.begin());
                 }
 
                 if (entraClusterI != NULL)
@@ -414,7 +426,7 @@ void Guloso::preencheClusters(int *clusterVertice, int numeroVertices, int *idsI
                         clusters[i]->addAresta(entraClusterI);
                         clusters[i]->setPesoArestas(entraClusterI->getPeso());
                         numArestasInvalidas += 1;
-                        arestaValida[entraClusterI->getIdAresta()] = 1;
+                        arestaValida[entraClusterI->getIdAresta()] = false;
                         clusterRecebeuAresta[i] = 1;
                     }
                 }
@@ -521,7 +533,7 @@ void Guloso::preencheClusters(int *clusterVertice, int numeroVertices, int *idsI
                 numVert++;
             }
         }
-
+        cout << "percorreu todos os clusters" << endl;
     } while (numArestasInvalidas < numArestas || numVert < numeroVertices);
 
     tempo_t end = relogio_t::now();
